@@ -1,0 +1,45 @@
+﻿name: Run tests and build project # Name of the action
+
+# on which branch should the action run
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  play-wright-tests: # name of the job
+    runs-on: ubuntu-latest # Operating system to run the action on
+    
+    steps: # steps to run the job
+      - uses: actions/checkout@v3 # checkout the code from the repository
+      - uses: actions/setup-dotnet@v3 # setup .NET
+        with:
+          dotnet-version: 8.0.x # version of .NET to use
+      - uses: actions/setup-node@v3 # setup node
+        with:
+          node-version: 18.x.x # version of node to use
+
+#      - name: install React
+#        run: run frontend
+
+#      - name: Build test code and install playwright test browser
+#        run: cd test && dotnet build && pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps # By using --with-deps, you ensure that the entire Playwright environment, including its dependencies, is set up correctly on your system.
+
+      - name: Build and run Web API + getting process ID for shutting down later
+        run: cd api && dotnet run & echo "API_PID=$!" >> $GITHUB_ENV
+        env:
+          pgconn: ${{secrets.PG_CONN}} # PostgresSQL connection string from secrets on GitHub
+
+      - name: Run tests once API is running (sleep interval set to 60 seconds)
+        run: cd test && sleep 60 && dotnet test
+        env:
+          pgconn: ${{secrets.PG_CONN}}
+
+      - name: Shutdown Web API once the tests are done running
+        run: kill $API_PID 
+  
