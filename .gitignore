@@ -1,2 +1,5 @@
 ﻿.bin
 .obj
+api/docker-compose.yaml
+api/appsettings.json
+.env

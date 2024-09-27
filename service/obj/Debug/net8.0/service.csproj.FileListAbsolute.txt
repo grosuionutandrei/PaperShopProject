@@ -1,0 +1,16 @@
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\bin\Debug\net8.0\service.deps.json
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\bin\Debug\net8.0\service.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\bin\Debug\net8.0\service.pdb
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\bin\Debug\net8.0\infrastructure.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\bin\Debug\net8.0\infrastructure.pdb
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\service.csproj.AssemblyReference.cache
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\service.GeneratedMSBuildEditorConfig.editorconfig
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\service.AssemblyInfoInputs.cache
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\service.AssemblyInfo.cs
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\service.csproj.CoreCompileInputs.cache
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\service.sourcelink.json
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\service.csproj.Up2Date
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\service.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\refint\service.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\service.pdb
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\ref\service.dll

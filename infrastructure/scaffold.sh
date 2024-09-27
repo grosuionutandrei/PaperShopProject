@@ -1,0 +1,2 @@
+﻿#!/usr/bin/env bash
+dotnet ef dbcontext scaffold  "Server=localhost;Database=paperDb;User Id=andrei;Password=LexmarkMx310;"  Npgsql.EntityFrameworkCore.PostgreSQL  --output-dir ./Models  --context-dir .  --context PaperDbContext  --no-onconfiguring --force

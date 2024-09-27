@@ -1,0 +1,13 @@
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\bin\Debug\net8.0\test.deps.json
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\bin\Debug\net8.0\test.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\bin\Debug\net8.0\test.pdb
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\obj\Debug\net8.0\test.csproj.AssemblyReference.cache
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\obj\Debug\net8.0\test.GeneratedMSBuildEditorConfig.editorconfig
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\obj\Debug\net8.0\test.AssemblyInfoInputs.cache
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\obj\Debug\net8.0\test.AssemblyInfo.cs
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\obj\Debug\net8.0\test.csproj.CoreCompileInputs.cache
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\obj\Debug\net8.0\test.sourcelink.json
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\obj\Debug\net8.0\test.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\obj\Debug\net8.0\refint\test.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\obj\Debug\net8.0\test.pdb
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\test\obj\Debug\net8.0\ref\test.dll

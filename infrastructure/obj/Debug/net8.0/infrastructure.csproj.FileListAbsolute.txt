@@ -1,0 +1,15 @@
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\bin\Debug\net8.0\infrastructure.deps.json
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\bin\Debug\net8.0\infrastructure.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\bin\Debug\net8.0\infrastructure.pdb
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\obj\Debug\net8.0\infrastructure.csproj.AssemblyReference.cache
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\obj\Debug\net8.0\infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\obj\Debug\net8.0\infrastructure.AssemblyInfoInputs.cache
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\obj\Debug\net8.0\infrastructure.AssemblyInfo.cs
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\obj\Debug\net8.0\infrastructure.csproj.CoreCompileInputs.cache
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\obj\Debug\net8.0\infrastructure.sourcelink.json
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\obj\Debug\net8.0\infrastructure.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\obj\Debug\net8.0\refint\infrastructure.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\obj\Debug\net8.0\infrastructure.pdb
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\obj\Debug\net8.0\ref\infrastructure.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\bin\Debug\net8.0\infrastructure.runtimeconfig.json
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\infrastructure\obj\Debug\net8.0\infrastructure.genruntimeconfig.cache
