@@ -44,3 +44,5 @@ D:\thirdsemester\CSharp\3rd_semester_paper_shop\api\bin\Debug\net8.0\FluentValid
 D:\thirdsemester\CSharp\3rd_semester_paper_shop\api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
 D:\thirdsemester\CSharp\3rd_semester_paper_shop\api\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
 D:\thirdsemester\CSharp\3rd_semester_paper_shop\api\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\api\bin\Debug\net8.0\utilities.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\api\bin\Debug\net8.0\utilities.pdb

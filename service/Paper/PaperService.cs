@@ -1,7 +1,7 @@
 ﻿
 using infrastructure.QuerryModels;
 using infrastructure.Repository;
-using service.TransferModels.Request;
+
 
 namespace service.Paper;
 
@@ -26,23 +26,40 @@ public class PaperService :IPaperService
         return _repository.GetPaperProprieties();
     }
 
-    public Task<PaperToDisplay> EditPaper(PaperToEditDto paperToEditDto)
+    public  Task<bool> EditPaper(PaperToDisplay paperToDisplay)
     {
-        return 
+        return _repository.EditPaper(paperToDisplay);
     }
+
+
 
     public Task<PaperProperties> CreatePaperProperty(string propertyName)
     {
         return _repository.CreatePaperProperty(propertyName);
     }
 
-    public Task<PaperProperties> EditPaperProperty(int propertyId, string? propName)
+    public Task<PaperProperties> EditPaperProperty(PaperProperties paperProperties)
     {
-        return _repository.EditPaperProperty(propertyId,propName);
+        return _repository.EditPaperProperty(paperProperties);
     }
 
     public Task<bool> DeletePaperProperty(int propertyId,string propertyName)
     {
         return _repository.DeletePaperProperty(propertyId,propertyName);
+    }
+
+    public Task<bool> ArePaperObjectsEqual(int requestId)
+    {
+        return _repository.ArePaperObjectsEqual(requestId);
+    }
+
+    public Task<PaperToDisplay> GetPaperById(int paperId)
+    {
+        return _repository.GetPaperById(paperId);
+    }
+
+    public Task<bool> DeletePaperById(int paperId)
+    {
+        return _repository.DeletePaperById(paperId);
     }
 }

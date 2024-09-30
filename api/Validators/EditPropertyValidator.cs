@@ -1,6 +1,5 @@
 ﻿using api.TransferModels;
 using FluentValidation;
-using infrastructure.ErrorMessages;
 using utilities.ErrorMessages;
 
 namespace api.Validators;
