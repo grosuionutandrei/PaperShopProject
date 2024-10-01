@@ -1,4 +1,5 @@
-﻿using infrastructure.QuerryModels;
+﻿using api.TransferModels;
+using infrastructure.QuerryModels;
 using Microsoft.AspNetCore.Mvc;
 using service.Orders;
 
@@ -35,7 +36,7 @@ public class OrderController:ControllerBase
 
     [HttpGet]
     [Route("/api/order/{orderId}/orderentries")]
-    public async Task<ActionResult<IEnumerable<OrderEntry>>> GetEntriesForOrder(int orderId)
+    public async Task<ActionResult<IEnumerable<OrderEntryQto>>> GetEntriesForOrder(int orderId)
     {
         if (!ModelState.IsValid)
         {
@@ -70,8 +71,23 @@ public class OrderController:ControllerBase
 
     [HttpPost]
     [Route("/api/customer/{customerId}/placeOrder")]
-    public async Task<ActionResult<bool>> PlaceOrder()
+    public async Task<ActionResult<OrderMain>> PlaceOrder(int customerId,[FromBody] OrderPlacedDto orderPlaced)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var orderPlacedEntries = orderPlaced.OrderPlacedProducts!
+            .Select(e => new OrderEntryPlaced
+            {
+                ProductId = e.ProductId,
+                Quantity = e.Quantity
+            }).ToList();
+
+        var placeOrder = await _orderService.PlaceOrder(customerId,orderPlacedEntries);
+
+        return placeOrder;
     }
 
 
