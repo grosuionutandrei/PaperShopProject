@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace infrastructure.Models;
 
-public  class Property
+public partial class Property
 {
     public int Id { get; set; }
 

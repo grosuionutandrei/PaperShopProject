@@ -17,6 +17,8 @@ public partial class Order
 
     public int? CustomerId { get; set; }
 
+    public bool Deleted { get; set; }
+
     public virtual Customer? Customer { get; set; }
 
     public virtual ICollection<OrderEntry> OrderEntries { get; set; } = new List<OrderEntry>();

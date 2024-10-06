@@ -10,7 +10,8 @@
         "dependencies": {
           "FluentValidation": "11.10.0",
           "Microsoft.EntityFrameworkCore": "8.0.8",
-          "infrastructure": "1.0.0"
+          "infrastructure": "1.0.0",
+          "utilities": "1.0.0"
         },
         "runtime": {
           "service.dll": {}
@@ -205,6 +206,11 @@
         "runtime": {
           "infrastructure.dll": {}
         }
+      },
+      "utilities/1.0.0": {
+        "runtime": {
+          "utilities.dll": {}
+        }
       }
     }
   },
@@ -334,6 +340,11 @@
       "hashPath": "npgsql.entityframeworkcore.postgresql.8.0.4.nupkg.sha512"
     },
     "infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "utilities/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

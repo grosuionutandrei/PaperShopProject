@@ -1,8 +1,11 @@
 ﻿
+using System.Runtime.InteropServices.JavaScript;
 using api.TransferModels;
 using api.TransferModels.Response;
-using infrastructure.ErrorMessages;
+using infrastructure.QuerryModels;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using service.Paper;
 using utilities.ErrorMessages;
 
@@ -29,15 +32,72 @@ public class PaperController : ControllerBase
         return Ok(paperObjects);
     }
     
+    
+    
     //edit paper product
 
-    [HttpGet]
-    [Route("api/papers/details/{paperId}")]
-    public Task<ActionResult> EditPaper([FromBody]  )
+    [HttpPut]
+    [Route("api/papers/edit/{paperId}")]
+    public async Task<ActionResult<PaperToDisplay>> EditPaper([FromBody] EditPaperDto editPaperDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var paperToEdit = new PaperToDisplay
+        {
+            Id = editPaperDto.Id,
+            Price = editPaperDto.Price,
+            Discontinued = editPaperDto.Discontinued,
+            Stock = editPaperDto.Stock,
+            Name=editPaperDto.Name
+        };
+        var editedPaper = await _paperService.EditPaper(paperToEdit);
+        if (editedPaper)
+        {
+            return new OkObjectResult(editPaperDto);
+        }
+
+        return new NotFoundObjectResult(new { Error = ErrorMessages.GetMessage(ErrorCode.PropertyNotFound), Data = editPaperDto });
+    }
+    
+    //TODO
+    //get the details of the paper depending on the ui
+    [HttpGet]
+    [Route("/api/papers/details{paperId}")]
+    public async Task<ActionResult<PaperToDisplay>> GetPaperById(int paperId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var paperDetails = await _paperService.GetPaperById(paperId);
+        return  Ok(paperDetails);
     }
 
 
+    /// <summary>
+    /// Delete the paper by id.
+    /// </summary>
+    /// <value>The paper's unique identifier.</value>
+
+    [HttpDelete]
+    [Route("/api/papers/delete/{paperId}")]
+    public async Task<ActionResult<bool>> DeletePaper(int paperId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var isDeleted =await _paperService.DeletePaperById(paperId);
+        if (!isDeleted)
+        {
+            return NotFound(isDeleted);
+        }
+
+        return Ok(isDeleted);
+    }
 
 
 
@@ -75,7 +135,14 @@ public class PaperController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-        var editedProperty = _paperService.EditPaperProperty(editPaperPropertyDto.PropertyId,editPaperPropertyDto.PropName);
+
+        var propertyToEdit = new PaperProperties
+        {
+            PropId = editPaperPropertyDto.PropertyId,
+            PropName = editPaperPropertyDto.PropName
+        };
+        
+        var editedProperty = _paperService.EditPaperProperty(propertyToEdit);
 
         return Ok(editedProperty);
 

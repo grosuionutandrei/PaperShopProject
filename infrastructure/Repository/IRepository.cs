@@ -10,6 +10,13 @@ public interface IRepository
         string orderBy, string filter, int paperPropertyId);
 
   Task<PaperProperties> CreatePaperProperty(string propertyName);
-  Task<PaperProperties> EditPaperProperty(int propertyId, string? propName);
+  /*Task<PaperProperties> EditPaperProperty(int propertyId, string? propName);*/
   Task<bool> DeletePaperProperty(int propertyId,string propertyName);
+  
+ Task<PaperProperties> EditPaperProperty(PaperProperties paperProperties);
+
+ Task<bool> EditPaper(PaperToDisplay paperToDisplay);
+ Task<bool> ArePaperObjectsEqual(int requestId);
+ Task<PaperToDisplay> GetPaperById(int paperId);
+ Task<bool> DeletePaperById(int paperId);
 }

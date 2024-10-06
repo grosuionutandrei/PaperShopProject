@@ -4,9 +4,12 @@ using api.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using infrastructure;
+using infrastructure.Models;
 using infrastructure.Repository;
+using infrastructure.Repository.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using service.Orders;
 using service.Paper;
 
 
@@ -32,6 +35,8 @@ builder.Services.AddDbContext<DataBaseContext>((serviceProvider, options) =>
 // Add repositories and services
 builder.Services.AddScoped<IRepository, PaperRepository>();
 builder.Services.AddScoped<IPaperService, PaperService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 
 builder.Services.AddControllers();

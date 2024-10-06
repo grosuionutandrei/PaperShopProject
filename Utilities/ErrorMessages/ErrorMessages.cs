@@ -12,7 +12,9 @@ public enum ErrorCode
     PropertyNotFound,
     Discontinued,
     Price,
-    Stock
+    Stock,
+    IdNotEqual,
+    StatusInvalid
 }
 
 
@@ -21,6 +23,7 @@ public static class ErrorMessages
     private static readonly Dictionary<ErrorCode, string> _errorMessages = new Dictionary<ErrorCode, string>
     {
         { ErrorCode.ErrorId, "Id is required" },
+        { ErrorCode.IdNotEqual,"Wrong request entity is not present" },
         { ErrorCode.ErrorName, "Name is required" },
         { ErrorCode.ErrorEmail, "Email is invalid" },
         { ErrorCode.InvalidPassword, "The password is incorrect" },
@@ -30,7 +33,8 @@ public static class ErrorMessages
         {ErrorCode.PropertyNotFound,"Property is not present"},
         {ErrorCode.Discontinued,"Discontinued value is required"},
         {ErrorCode.Price,"Price must be bigger than zero"},
-        {ErrorCode.Stock,"Stock value can not be negative"}
+        {ErrorCode.Stock,"Stock value can not be negative"},
+        { ErrorCode.StatusInvalid ,"Status invalid"}
         
     };
     

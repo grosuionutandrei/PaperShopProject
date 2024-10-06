@@ -14,3 +14,5 @@ D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\service
 D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\refint\service.dll
 D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\service.pdb
 D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\obj\Debug\net8.0\ref\service.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\bin\Debug\net8.0\utilities.dll
+D:\thirdsemester\CSharp\3rd_semester_paper_shop\service\bin\Debug\net8.0\utilities.pdb

@@ -1,6 +1,5 @@
 ﻿
 using infrastructure.QuerryModels;
-using service.TransferModels.Request;
 
 namespace service.Paper;
 
@@ -10,14 +9,16 @@ public interface IPaperService
         string orderBy, string filter, int paperPropertyId);
     IEnumerable<PaperProperties> GetPaperProprieties();
 
-    Task<PaperToDisplay> EditPaper(PaperToEditDto paperToEditDto);
+    Task<bool> EditPaper(PaperToDisplay paperToDisplay);
 
     Task<PaperProperties> CreatePaperProperty(string propertyName);
 
 
-    Task<PaperProperties> EditPaperProperty(int propertyId, string? propName);
+    Task<PaperProperties> EditPaperProperty(PaperProperties paperProperties);
     Task <bool>DeletePaperProperty(int propertyId,string propertyName);
-    
-    
-    
+
+
+    Task<bool> ArePaperObjectsEqual(int requestId);
+    Task<PaperToDisplay> GetPaperById(int paperId);
+    Task<bool> DeletePaperById(int paperId);
 }
