@@ -6,8 +6,7 @@ public interface IRepository
 {
     IEnumerable<PaperProperties> GetPaperProprieties();
 
-    public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber, string searchTerm, int pageItems,
-        string orderBy, string filter, int paperPropertyId);
+    public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber, int itemsPerPage);
 
   Task<PaperProperties> CreatePaperProperty(string propertyName);
   /*Task<PaperProperties> EditPaperProperty(int propertyId, string? propName);*/
@@ -17,6 +16,6 @@ public interface IRepository
 
  Task<bool> EditPaper(PaperToDisplay paperToDisplay);
  Task<bool> ArePaperObjectsEqual(int requestId);
- Task<PaperToDisplay> GetPaperById(int paperId);
+ public Task<IEnumerable<PaperProperties>> GetPaperById(int paperId);
  Task<bool> DeletePaperById(int paperId);
 }

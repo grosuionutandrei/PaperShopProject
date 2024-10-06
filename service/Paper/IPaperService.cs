@@ -5,8 +5,7 @@ namespace service.Paper;
 
 public interface IPaperService
 {
-    public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber, string searchTerm, int pageItems,
-        string orderBy, string filter, int paperPropertyId);
+    public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber,int itemsPerPage);
     IEnumerable<PaperProperties> GetPaperProprieties();
 
     Task<bool> EditPaper(PaperToDisplay paperToDisplay);
@@ -19,6 +18,6 @@ public interface IPaperService
 
 
     Task<bool> ArePaperObjectsEqual(int requestId);
-    Task<PaperToDisplay> GetPaperById(int paperId);
+    Task<IEnumerable<PaperProperties>> GetPaperById(int paperId);
     Task<bool> DeletePaperById(int paperId);
 }

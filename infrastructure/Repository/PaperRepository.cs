@@ -27,14 +27,51 @@ public class PaperRepository: IRepository
         }).ToList();
     }
 
-    public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber, string searchTerm, int pageItems, string orderBy, string filter, int paperPropertyId)
+    public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber, int pageItems)
     {
-        Console.WriteLine(searchTerm);
         var query = _dataBaseContext.Papers.AsQueryable();
-        query = !string.IsNullOrEmpty(searchTerm) ? query.Where(e => e.Name.ToLower().Contains(searchTerm.ToLower())) : query;
-        query = paperPropertyId != 0 ? query.Where(e => e.Properties.Any(p => p.Id == paperPropertyId)) : query;
-        query = pageNumber > 0 ? query.Skip(pageNumber * pageItems):query; 
-        
+
+        // // Apply search term filter
+        // if (!string.IsNullOrEmpty(searchTerm))
+        // {
+        //     query = query.Where(e => e.Name.ToLower().Contains(searchTerm.ToLower()));
+        // }
+        //
+        // // Apply paper property filter
+        // if (paperPropertyId != 0)
+        // {
+        //     query = query.Where(e => e.Properties.Any(p => p.Id == paperPropertyId));
+        // }
+        //
+        // // Apply pagination
+        if (pageNumber > 0)
+        {
+            query = query.Skip(pageNumber * pageItems);
+        }
+        //
+        // // Apply ordering
+        // switch (orderBy.ToLower())
+        // {
+        //     case "name":
+        //         query = query.OrderBy(e => e.Name);
+        //         break;
+        //     case "price":
+        //         query = query.OrderBy(e => e.Price);
+        //         break;
+        //     case "stock":
+        //         query = query.OrderBy(e => e.Stock);
+        //         break;
+        //     default:
+        //         query = query.OrderBy(e => e.Id);
+        //         break;
+        // }
+        //
+        // // Apply filter
+        // if (!string.IsNullOrEmpty(filter))
+        // {
+        //     // Add filter logic here if needed
+        // }
+
         return query
             .Take(pageItems)
             .Select(e => new PaperToDisplay
@@ -102,20 +139,19 @@ public class PaperRepository: IRepository
         return paper != null;
     }
 
-    public async Task<PaperToDisplay> GetPaperById(int paperId)
-    {
-        var paperToDisplay = await _dataBaseContext.Papers
+    public async Task<IEnumerable<PaperProperties>> GetPaperById(int paperId)
+    { 
+        
+        
+        var paperProperties = await _dataBaseContext.Papers
             .Where(e => e.Id == paperId)
-            .Select(e => new PaperToDisplay
+            .SelectMany(p => p.Properties)
+            .Select(p => new PaperProperties()
             {
-                Id = e.Id,
-                Name = e.Name,
-                Discontinued = e.Discontinued,
-                Price = e.Price,
-                Stock = e.Stock
-            })
-            .FirstOrDefaultAsync();
-        return paperToDisplay ?? new PaperToDisplay();
+                PropId = p.Id,
+                PropName = p.PropertyName
+            }).ToListAsync();
+        return paperProperties;
     }
 
     public async Task<bool> DeletePaperById(int paperId)
