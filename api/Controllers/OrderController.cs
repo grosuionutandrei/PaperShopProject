@@ -18,9 +18,9 @@ public class OrderController:ControllerBase
 
     [HttpGet]
     [Route("/api/customer/{customerId}/orders")]
-    public async Task<ActionResult<IEnumerable<OrderMain>>> GetOrderByCustomerId(int customerId)
+    public async Task<ActionResult<IEnumerable<OrderMain>>> GetOrderByCustomerId([FromRoute] IdentificationDto customerId)
     {
-        var results = await _orderService.GetOrdersByCustomerId(customerId);
+        var results = await _orderService.GetOrdersByCustomerId(customerId.Id);
         if (!results.Any())
         {
             return NotFound(results);
@@ -31,9 +31,9 @@ public class OrderController:ControllerBase
 
     [HttpGet]
     [Route("/api/order/{orderId}/orderentries")]
-    public async Task<ActionResult<IEnumerable<OrderEntryQto>>> GetEntriesForOrder(int orderId)
+    public async Task<ActionResult<IEnumerable<OrderEntryQto>>> GetEntriesForOrder([FromRoute ] IdentificationDto orderId)
     {
-        var results = await _orderService.GetEntriesForOrder(orderId);
+        var results = await _orderService.GetEntriesForOrder(orderId.Id);
         if (!results.Any())
         {
             return NotFound(results);
@@ -43,9 +43,9 @@ public class OrderController:ControllerBase
 
     [HttpPatch]
     [Route("/api/order/edit/{orderId}")]
-    public async Task<ActionResult<bool>> ChangeOrderStatus(int orderId,[FromQuery] string status)
+    public async Task<ActionResult<bool>> ChangeOrderStatus([FromRoute] IdentificationDto orderId,[FromQuery] string status)
     {
-        var statusModified = await _orderService.ModifyOrderStatus(orderId,status);
+        var statusModified = await _orderService.ModifyOrderStatus(orderId.Id,status);
         if (!statusModified)
         {
             return BadRequest(statusModified);
@@ -55,7 +55,7 @@ public class OrderController:ControllerBase
 
     [HttpPost]
     [Route("/api/customer/{customerId}/placeOrder")]
-    public async Task<ActionResult<OrderMain>> PlaceOrder(int customerId,[FromBody] OrderPlacedDto orderPlaced)
+    public async Task<ActionResult<OrderMain>> PlaceOrder([FromRoute] IdentificationDto customerId,[FromBody] OrderPlacedDto orderPlaced)
     {
         var orderPlacedEntries = orderPlaced.OrderPlacedProducts!
             .Select(e => new OrderEntryPlaced
@@ -63,7 +63,7 @@ public class OrderController:ControllerBase
                 ProductId = e.ProductId,
                 Quantity = e.Quantity
             }).ToList();
-        var placeOrder = await _orderService.PlaceOrder(customerId,orderPlacedEntries);
+        var placeOrder = await _orderService.PlaceOrder(customerId.Id,orderPlacedEntries);
         return placeOrder;
     }
     
@@ -75,9 +75,9 @@ public class OrderController:ControllerBase
     /// 
     [HttpGet]
     [Route("/customer/{customerId}/history")]
-    public async Task<ActionResult<IEnumerable<OrderMain>>> GetCustomerOrderHistory(int customerId)
+    public async Task<ActionResult<IEnumerable<OrderMain>>> GetCustomerOrderHistory(IdentificationDto customerId)
     {
-        var customerHistory =await _orderService.GetCustomerOrderHistory(customerId);
+        var customerHistory =await _orderService.GetCustomerOrderHistory(customerId.Id);
         return Ok(customerHistory );
     }
     

@@ -25,11 +25,12 @@ public class PaperController : ControllerBase
     //get paper products per pages
     [HttpGet]
     [Route("/api/papers/{pageNumber}")]
-    public ActionResult GetPaper([FromRoute] int pageNumber, [FromQuery] string searchTerm, int pageItems,
-        string orderParam, string filterParam, int propertyId)
+    public ActionResult GetPaper([FromRoute] int pageNumber,[FromQuery] PaperQueryDto paperQuerry)
     {
+        Console.WriteLine("ana are mere");
+        var request = new PaperQueryDto{PageNumber = pageNumber,PageItems = paperQuerry.PageItems};
         var paperObjects =
-            _paperService.GetPaperWithQuerries(pageNumber, searchTerm, pageItems, orderParam, filterParam, propertyId);
+            _paperService.GetPaperWithQuerries( request.PageNumber,request.PageItems);
         return Ok(paperObjects);
     }
 
@@ -61,8 +62,8 @@ public class PaperController : ControllerBase
     //TODO
     //get the details of the paper depending on the ui
     [HttpGet]
-    [Route("/api/papers/details{paperId}")]
-    public async Task<ActionResult<PaperToDisplay>> GetPaperById(int paperId)
+    [Route("/api/papers/details/{paperId}")]
+    public async Task<ActionResult<IEnumerable<PaperProperties>>> GetPaperById(int paperId)
     {
         var paperDetails = await _paperService.GetPaperById(paperId);
         return Ok(paperDetails);
