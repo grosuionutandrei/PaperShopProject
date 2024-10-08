@@ -1,14 +1,15 @@
-﻿using FluentValidation;
+﻿using api.TransferModels;
+using FluentValidation;
 using utilities.ErrorMessages;
 using utilities.OrderStatus;
 
 namespace api.Validators;
 
-public class ValidateStatus:AbstractValidator<string>
+public class ValidateStatus:AbstractValidator<Status>
 {
     public ValidateStatus()
     {
-        RuleFor(x => x).Must(IsValidStatus).WithMessage(ErrorMessages.GetMessage(ErrorCode.StatusInvalid));
+        RuleFor(x => x.status).Must(IsValidStatus!).WithMessage(ErrorMessages.GetMessage(ErrorCode.StatusInvalid));
     }
 
     private static bool IsValidStatus(string status)

@@ -15,10 +15,9 @@ public class PaperService :IPaperService
     }
 
 
-    public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber, string searchTerm, int pageItems,
-        string orderBy, string filter, int paperPropertyId)
+    public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber,int pageItems)
     {
-        return _repository.GetPaperWithQuerries(pageNumber,searchTerm,pageItems,orderBy,filter,paperPropertyId);
+        return _repository.GetPaperWithQuerries(pageNumber,pageItems);
     }
 
     public IEnumerable<PaperProperties> GetPaperProprieties()
@@ -53,7 +52,7 @@ public class PaperService :IPaperService
         return _repository.ArePaperObjectsEqual(requestId);
     }
 
-    public Task<PaperToDisplay> GetPaperById(int paperId)
+    public Task<IEnumerable<PaperProperties>> GetPaperById(int paperId)
     {
         return _repository.GetPaperById(paperId);
     }
@@ -61,5 +60,15 @@ public class PaperService :IPaperService
     public Task<bool> DeletePaperById(int paperId)
     {
         return _repository.DeletePaperById(paperId);
+    }
+
+    public Task<PriceRange> GetPriceRange()
+    {
+        return _repository.GetPriceRange();
+    }
+
+    public Task<IEnumerable<PaperToDisplay>> GetPapersByFilter(PaperFilterQuery filterPapers)
+    {
+        return _repository.GetPapersByFilter(filterPapers);
     }
 }

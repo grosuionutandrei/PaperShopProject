@@ -1,6 +1,7 @@
 ﻿namespace infrastructure.QuerryModels;
 
-public interface OrderPlaced
+public class OrderPlaced:OrderMain
 {
-    
+    public IEnumerable<OrderEntryPlaced>? OrderProducts { get; set; }
+    public bool Deleted { get; set; } = false;
 }
