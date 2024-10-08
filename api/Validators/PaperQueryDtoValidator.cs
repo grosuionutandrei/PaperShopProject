@@ -3,7 +3,7 @@ using FluentValidation;
 using utilities.ErrorMessages;
 namespace api.Validators;
 
-public class PaperQueryDtoValidator:AbstractValidator<PaperQueryDto>
+public class PaperQueryDtoValidator:AbstractValidator<PaperPaginationQueryDto>
 {
     public PaperQueryDtoValidator()
     {

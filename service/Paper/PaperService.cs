@@ -61,4 +61,14 @@ public class PaperService :IPaperService
     {
         return _repository.DeletePaperById(paperId);
     }
+
+    public Task<PriceRange> GetPriceRange()
+    {
+        return _repository.GetPriceRange();
+    }
+
+    public Task<IEnumerable<PaperToDisplay>> GetPapersByFilter(PaperFilterQuery filterPapers)
+    {
+        return _repository.GetPapersByFilter(filterPapers);
+    }
 }

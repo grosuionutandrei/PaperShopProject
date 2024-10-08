@@ -104,7 +104,7 @@ public class OrderRepository : IOrderRepository
             return new List<OrderMain>();
         }
 
-        var orders = await _dataBaseContext.Orders.Where(e => e.Id == customerId)
+        var orders = await _dataBaseContext.Orders.Where(e => e.CustomerId == customerId)
             .Select(e => new OrderMain
             {
                 Id = e.Id,

@@ -14,18 +14,54 @@ public class PaperRepository: IRepository
         _dataBaseContext = db;
     }
 
-
-    public IEnumerable<PaperToDisplay>  GetPaper()
+    public async Task<IEnumerable<PaperToDisplay>> GetPapersByFilter(PaperFilterQuery filterPapers)
     {
-        return _dataBaseContext.Papers.Select(e =>new PaperToDisplay
+
+        var query = _dataBaseContext.Papers.AsQueryable();
+        if (filterPapers.pageNumber > 0)
         {
-         Id   = e.Id,
-         Discontinued = e.Discontinued,
-         Name=e.Name,
-         Price=e.Price,
-         Stock = e.Stock
-        }).ToList();
+            query = query.Skip(filterPapers.pageNumber * filterPapers.pageItems);
+        }
+
+        if (!String.IsNullOrEmpty(filterPapers.searchFilter))
+        {
+            string search = filterPapers.searchFilter.TrimStart().TrimEnd();
+            query = query.Where(p => p.Name.ToLower().Contains(search.ToLower()));
+        }
+
+        if (filterPapers.priceRange != null)
+        {
+            if (filterPapers.priceRange.minimumRange.HasValue)
+            {
+                query = query.Where(p => p.Price >= filterPapers.priceRange.minimumRange.Value);
+            }
+
+            if (filterPapers.priceRange.maximumRange.HasValue)
+            {
+                query = query.Where(p => p.Price <= filterPapers.priceRange.maximumRange.Value);
+            }
+        }
+
+        if (filterPapers.paperPropertiesIds != null && filterPapers.paperPropertiesIds.Any())
+        {
+            query = query.Where(p => p.Properties.Any(prop => filterPapers.paperPropertiesIds.Contains(prop.Id)));
+        }
+        
+        
+    var result = await query
+        .Take(filterPapers.pageItems)
+        .Select(e => new PaperToDisplay
+        {
+            Id = e.Id,
+            Discontinued = e.Discontinued,
+            Name = e.Name,
+            Price = e.Price,
+            Stock = e.Stock
+        }).ToListAsync();
+     Console.WriteLine(result);
+    return result;
     }
+    
 
     public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber, int pageItems)
     {
@@ -167,6 +203,15 @@ public class PaperRepository: IRepository
         await _dataBaseContext.SaveChangesAsync();
         return true;
     }
+
+    public async Task<PriceRange> GetPriceRange()
+    {
+        var priceMin = await _dataBaseContext.Papers.MinAsync(p => p.Price);
+        var priceMax = await _dataBaseContext.Papers.MaxAsync(p=>p.Price);
+        return new PriceRange { minimumRange = priceMin,maximumRange = priceMax};
+    }
+
+   
 
     public async Task<bool> DeletePaperProperty(int propertyId,string propertyName)
     {

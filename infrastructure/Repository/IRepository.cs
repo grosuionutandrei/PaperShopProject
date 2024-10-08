@@ -18,4 +18,7 @@ public interface IRepository
  Task<bool> ArePaperObjectsEqual(int requestId);
  public Task<IEnumerable<PaperProperties>> GetPaperById(int paperId);
  Task<bool> DeletePaperById(int paperId);
+
+ Task<PriceRange> GetPriceRange();
+ Task<IEnumerable<PaperToDisplay>> GetPapersByFilter(PaperFilterQuery filterPapers);
 }

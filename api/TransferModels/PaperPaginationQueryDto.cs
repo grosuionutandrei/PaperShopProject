@@ -1,6 +1,6 @@
 ﻿namespace api.TransferModels;
 
-public class PaperQueryDto
+public class PaperPaginationQueryDto
 
 {
     public int PageNumber { get; set; }

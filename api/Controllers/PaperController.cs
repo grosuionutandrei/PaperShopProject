@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices.JavaScript;
+using System.Text.Json;
 using api.TransferModels;
 using api.TransferModels.Response;
 using infrastructure.QuerryModels;
@@ -25,15 +26,70 @@ public class PaperController : ControllerBase
     //get paper products per pages
     [HttpGet]
     [Route("/api/papers/{pageNumber}")]
-    public ActionResult GetPaper([FromRoute] int pageNumber,[FromQuery] PaperQueryDto paperQuerry)
+    public ActionResult GetPaper([FromRoute] int pageNumber,[FromQuery] PaperPaginationQueryDto paperPaginationQuerry)
     {
-        Console.WriteLine("ana are mere");
-        var request = new PaperQueryDto{PageNumber = pageNumber,PageItems = paperQuerry.PageItems};
+        var request = new PaperPaginationQueryDto{PageNumber = pageNumber,PageItems = paperPaginationQuerry.PageItems};
         var paperObjects =
             _paperService.GetPaperWithQuerries( request.PageNumber,request.PageItems);
         return Ok(paperObjects);
     }
+    
+    [HttpGet]
+    [Route("/api/papers/filter")]
+    public async Task<ActionResult<IEnumerable<PaperToDisplay>>> GetPaperByFilter([FromQuery] PaperFilterDto paperFilterDto)
+    {
+        _logger.Log(LogLevel.Critical,JsonSerializer.Serialize(paperFilterDto));
+        // Check if the paperFilterDto is null
+        if (paperFilterDto == null)
+        {
+            return BadRequest("PaperFilterDto cannot be null.");
+        }
 
+        // Check if pagination is null
+        if (paperFilterDto.pagination == null)
+        {
+            return BadRequest("Pagination cannot be null.");
+        }
+
+        // Check if priceRange is null
+        if (paperFilterDto.priceRange == null)
+        {
+            return BadRequest("PriceRange cannot be null.");
+        }
+        
+        var filterPapers = new PaperFilterQuery
+        {
+            searchFilter = paperFilterDto.searchFilter,
+            pageNumber = paperFilterDto.pagination!.PageNumber,
+            pageItems = paperFilterDto.pagination!.PageItems,
+            priceRange = new PriceRange { minimumRange = paperFilterDto.priceRange!.minimumRange, maximumRange = paperFilterDto.priceRange!.maximumRange },
+            paperPropertiesIds = paperFilterDto.GetParsedPaperPropertiesIds()
+        };
+        Console.WriteLine("Printing props");
+        foreach (var VARIABLE in filterPapers.paperPropertiesIds)
+        {
+            
+            
+            Console.WriteLine(VARIABLE + "ANANAN");
+        }
+
+        {
+            
+        }
+        var result = await _paperService.GetPapersByFilter(filterPapers);
+        return Ok(result);
+    }
+
+
+
+    [HttpGet]
+    [Route("/api/papers/initialization/priceRange")]
+    public async Task<ActionResult<PriceRange>> GetPriceRange()
+    {
+        var priceRange = await _paperService.GetPriceRange();
+        return Ok(priceRange);
+    }
+    
 
     //edit paper product
 
