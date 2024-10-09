@@ -26,19 +26,22 @@ public class PaperController : ControllerBase
     //get paper products per pages
     [HttpGet]
     [Route("/api/papers/{pageNumber}")]
-    public ActionResult GetPaper([FromRoute] int pageNumber,[FromQuery] PaperPaginationQueryDto paperPaginationQuerry)
+    public ActionResult GetPaper([FromRoute] int pageNumber, [FromQuery] PaperPaginationQueryDto paperPaginationQuerry)
     {
-        var request = new PaperPaginationQueryDto{PageNumber = pageNumber,PageItems = paperPaginationQuerry.PageItems};
+        var request = new PaperPaginationQueryDto
+            { PageNumber = pageNumber, PageItems = paperPaginationQuerry.PageItems };
         var paperObjects =
-            _paperService.GetPaperWithQuerries( request.PageNumber,request.PageItems);
+            _paperService.GetPaperWithQuerries(request.PageNumber, request.PageItems);
         return Ok(paperObjects);
     }
-    
+
     [HttpGet]
     [Route("/api/papers/filter")]
-    public async Task<ActionResult<IEnumerable<PaperToDisplay>>> GetPaperByFilter([FromQuery] PaperFilterDto paperFilterDto)
+    public async Task<ActionResult<IEnumerable<PaperToDisplay>>> GetPaperByFilter(
+        [FromQuery] PaperFilterDto paperFilterDto)
     {
-        _logger.Log(LogLevel.Critical,JsonSerializer.Serialize(paperFilterDto));
+        _logger.Log(LogLevel.Critical, JsonSerializer.Serialize(paperFilterDto));
+
         // Check if the paperFilterDto is null
         if (paperFilterDto == null)
         {
@@ -56,30 +59,22 @@ public class PaperController : ControllerBase
         {
             return BadRequest("PriceRange cannot be null.");
         }
-        
+
         var filterPapers = new PaperFilterQuery
         {
             searchFilter = paperFilterDto.searchFilter,
             pageNumber = paperFilterDto.pagination!.PageNumber,
             pageItems = paperFilterDto.pagination!.PageItems,
-            priceRange = new PriceRange { minimumRange = paperFilterDto.priceRange!.minimumRange, maximumRange = paperFilterDto.priceRange!.maximumRange },
+            priceRange = new PriceRange
+            {
+                minimumRange = paperFilterDto.priceRange!.minimumRange,
+                maximumRange = paperFilterDto.priceRange!.maximumRange
+            },
             paperPropertiesIds = paperFilterDto.GetParsedPaperPropertiesIds()
         };
-        Console.WriteLine("Printing props");
-        foreach (var VARIABLE in filterPapers.paperPropertiesIds)
-        {
-            
-            
-            Console.WriteLine(VARIABLE + "ANANAN");
-        }
-
-        {
-            
-        }
         var result = await _paperService.GetPapersByFilter(filterPapers);
         return Ok(result);
     }
-
 
 
     [HttpGet]
@@ -89,7 +84,7 @@ public class PaperController : ControllerBase
         var priceRange = await _paperService.GetPriceRange();
         return Ok(priceRange);
     }
-    
+
 
     //edit paper product
 
@@ -114,6 +109,28 @@ public class PaperController : ControllerBase
         return new NotFoundObjectResult(new
             { Error = ErrorMessages.GetMessage(ErrorCode.PropertyNotFound), Data = editPaperDto });
     }
+
+
+    [HttpPatch]
+    [Route("api/papers/edit/{paperId}/properties/remove/{propertyId}")]
+    public async Task<ActionResult<bool>> EditPaper([FromRoute] RemovePropertyDto removePropertyDto)
+    {
+        var result =
+            await _paperService.RemovePropertyFromPaper(removePropertyDto.paperId, removePropertyDto.propertyId);
+
+        return Ok(result);
+    }
+    
+    [HttpPatch]
+    [Route("api/papers/edit/{paperId}/properties/{propertyId}")]
+    public async Task<ActionResult<bool>> AddPropertyToPaper([FromRoute] RemovePropertyDto removePropertyDto)
+    {
+        var result =
+            await _paperService.AddPropertyToPaper(removePropertyDto.paperId, removePropertyDto.propertyId);
+
+        return Ok(result);
+    }
+
 
     //TODO
     //get the details of the paper depending on the ui
@@ -191,5 +208,4 @@ public class PaperController : ControllerBase
         var deleteResponse = new DeletePropertyResponse(deletedProperty, editPaperPropertyDto);
         return deleteResponse.ConstructDeleteResponse(ErrorMessages.GetMessage(ErrorCode.PropertyNotFound));
     }
-    
 }
