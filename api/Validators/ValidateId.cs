@@ -1,12 +1,13 @@
-﻿using FluentValidation;
+﻿using api.TransferModels;
+using FluentValidation;
 using utilities.ErrorMessages;
 
 namespace api.Validators;
 
-public class ValidateId:AbstractValidator<int>
+public class ValidateId:AbstractValidator<IdentificationDto>
 {
     public ValidateId()
     {
-        RuleFor(x => x).NotNull().NotEmpty().GreaterThan(0).WithMessage(ErrorMessages.GetMessage(ErrorCode.ErrorId));
+        RuleFor(x => x.Id).NotNull().NotEmpty().GreaterThan(0).WithMessage(ErrorMessages.GetMessage(ErrorCode.ErrorId));
     }
 }

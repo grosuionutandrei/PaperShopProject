@@ -18,13 +18,8 @@ public class OrderController:ControllerBase
 
     [HttpGet]
     [Route("/api/customer/{customerId}/orders")]
-    public async Task<ActionResult<IEnumerable<OrderMain>>> GetOrderByCustomerId(int customerId)
+    public async Task<ActionResult<IEnumerable<OrderMain>>> GetOrderByCustomerId([FromRoute] int customerId)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         var results = await _orderService.GetOrdersByCustomerId(customerId);
         if (!results.Any())
         {
@@ -36,12 +31,8 @@ public class OrderController:ControllerBase
 
     [HttpGet]
     [Route("/api/order/{orderId}/orderentries")]
-    public async Task<ActionResult<IEnumerable<OrderEntryQto>>> GetEntriesForOrder(int orderId)
+    public async Task<ActionResult<IEnumerable<OrderEntryQto>>> GetEntriesForOrder([FromRoute ] int orderId)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
         var results = await _orderService.GetEntriesForOrder(orderId);
         if (!results.Any())
         {
@@ -52,45 +43,43 @@ public class OrderController:ControllerBase
 
     [HttpPatch]
     [Route("/api/order/edit/{orderId}")]
-    public async Task<ActionResult<bool>> ChangeOrderStatus(int orderId,[FromQuery] string status)
+    public async Task<ActionResult<bool>> ChangeOrderStatus([FromRoute] IdentificationDto orderId,[FromQuery] string status)
     {
-        
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var statusModified = await _orderService.ModifyOrderStatus(orderId,status);
+        var statusModified = await _orderService.ModifyOrderStatus(orderId.Id,status);
         if (!statusModified)
         {
             return BadRequest(statusModified);
         }
-
         return Ok(statusModified);
     }
 
     [HttpPost]
     [Route("/api/customer/{customerId}/placeOrder")]
-    public async Task<ActionResult<OrderMain>> PlaceOrder(int customerId,[FromBody] OrderPlacedDto orderPlaced)
+    public async Task<ActionResult<OrderMain>> PlaceOrder([FromRoute] int customerId,[FromBody] OrderPlacedDto orderPlaced)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         var orderPlacedEntries = orderPlaced.OrderPlacedProducts!
             .Select(e => new OrderEntryPlaced
             {
                 ProductId = e.ProductId,
                 Quantity = e.Quantity
             }).ToList();
-
         var placeOrder = await _orderService.PlaceOrder(customerId,orderPlacedEntries);
-
         return placeOrder;
     }
-
-
-
-
+    
+    
+    /// <summary>
+    /// Get order history for a customer.
+    /// </summary>
+    /// <value>.</value>
+    /// 
+    [HttpGet]
+    [Route("/customer/{customerId}/history")]
+    public async Task<ActionResult<IEnumerable<OrderMain>>> GetCustomerOrderHistory([FromRoute] int customerId )
+    {
+        var customerHistory =await _orderService.GetCustomerOrderHistory(customerId);
+        return Ok(customerHistory );
+    }
+    
+    
 }

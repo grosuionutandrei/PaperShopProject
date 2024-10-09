@@ -1,4 +1,4 @@
-name: API tests with .NET + TestContainers
+﻿name: API tests with .NET + TestContainers
 
 on:
   workflow_dispatch:
@@ -12,9 +12,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8'
+        dotnet-version: '8'
       - uses: docker/setup-buildx-action@v3
-      - name: Check Docker status
-        run: docker info
-      - run: dotnet test --logger:console;verbosity=detailed
-
+      - run: dotnet test
