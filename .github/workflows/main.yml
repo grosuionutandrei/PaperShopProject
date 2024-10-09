@@ -17,4 +17,3 @@ jobs:
       - name: Check Docker status
         run: docker info
       - run: dotnet test --logger:console;verbosity=detailed
-
