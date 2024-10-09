@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "infrastructure", "infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{00880878-9AED-4CE8-9742-CBB8A786BAEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{75BCC06F-7811-4932-AD4C-1A026EB8B9E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "utilities", "Utilities\utilities.csproj", "{75BCC06F-7811-4932-AD4C-1A026EB8B9E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
