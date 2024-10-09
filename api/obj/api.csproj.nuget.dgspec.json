@@ -249,12 +249,12 @@
         }
       }
     },
-    "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\Utilities\\Utilities.csproj": {
+    "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\Utilities\\utilities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\Utilities\\Utilities.csproj",
-        "projectName": "Utilities",
-        "projectPath": "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\Utilities\\Utilities.csproj",
+        "projectUniqueName": "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\Utilities\\utilities.csproj",
+        "projectName": "utilities",
+        "projectPath": "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\Utilities\\utilities.csproj",
         "packagesPath": "C:\\Users\\ionut\\.nuget\\packages\\",
         "outputPath": "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\Utilities\\obj\\",
         "projectStyle": "PackageReference",
