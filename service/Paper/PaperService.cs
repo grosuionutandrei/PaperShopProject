@@ -71,4 +71,24 @@ public class PaperService :IPaperService
     {
         return _repository.GetPapersByFilter(filterPapers);
     }
+
+    public bool PaperExistsAsync(int paperId)
+    {
+        return _repository.PaperExistsAsync(paperId);
+    }
+
+    public bool PropertyExistsAsync(int propertyId)
+    {
+        return _repository.PropertyExistsAsync(propertyId);
+    }
+
+    public Task<bool> RemovePropertyFromPaper(int paperId, int propertyId)
+    {
+        return _repository.RemovePropertyFromPaper(paperId,propertyId);
+    }
+
+    public Task<bool> AddPropertyToPaper(int paperId, int propertyId)
+    {
+        return _repository.AddPropertyToPaper(paperId, propertyId);
+    }
 }

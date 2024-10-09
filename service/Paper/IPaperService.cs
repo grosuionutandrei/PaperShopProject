@@ -22,4 +22,8 @@ public interface IPaperService
     Task<bool> DeletePaperById(int paperId);
      Task<PriceRange> GetPriceRange();
      Task<IEnumerable<PaperToDisplay>> GetPapersByFilter(PaperFilterQuery filterPapers);
+     bool PaperExistsAsync(int paperId);
+     bool PropertyExistsAsync(int propertyId);
+     Task<bool> RemovePropertyFromPaper(int paperId, int propertyId);
+     Task<bool> AddPropertyToPaper(int paperId, int propertyId);
 }

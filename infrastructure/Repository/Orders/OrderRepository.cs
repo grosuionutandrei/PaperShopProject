@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿
 using infrastructure.Models;
 using infrastructure.QuerryModels;
 using Microsoft.EntityFrameworkCore;
