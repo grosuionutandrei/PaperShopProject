@@ -14,10 +14,7 @@ public enum ErrorCode
     Price,
     Stock,
     IdNotEqual,
-    StatusInvalid,
-    NoProducts,
-    PageNumber,
-    PageItems
+    StatusInvalid
 }
 
 
@@ -37,10 +34,7 @@ public static class ErrorMessages
         {ErrorCode.Discontinued,"Discontinued value is required"},
         {ErrorCode.Price,"Price must be bigger than zero"},
         {ErrorCode.Stock,"Stock value can not be negative"},
-        { ErrorCode.StatusInvalid ,"Status invalid"},
-        { ErrorCode.NoProducts ,"Order is containing no products"},
-        { ErrorCode.PageNumber,"Page number is invalid must be bigger or equal to zero" },
-        { ErrorCode.PageItems ,"Page items value needs to be bigger than 0"}
+        { ErrorCode.StatusInvalid ,"Status invalid"}
         
     };
     
