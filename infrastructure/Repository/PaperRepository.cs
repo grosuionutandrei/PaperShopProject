@@ -45,7 +45,7 @@ public class PaperRepository : IRepository
             query = query.Where(p => p.Properties.Any(prop => filterPapers.paperPropertiesIds.Contains(prop.Id)));
         }
 
-
+        query = query.Where(p => p.Discontinued != true);
         var result = await query
             .Take(filterPapers.pageItems)
             .Select(e => new PaperToDisplay
@@ -65,46 +65,11 @@ public class PaperRepository : IRepository
     {
         var query = _dataBaseContext.Papers.AsQueryable();
 
-        // // Apply search term filter
-        // if (!string.IsNullOrEmpty(searchTerm))
-        // {
-        //     query = query.Where(e => e.Name.ToLower().Contains(searchTerm.ToLower()));
-        // }
-        //
-        // // Apply paper property filter
-        // if (paperPropertyId != 0)
-        // {
-        //     query = query.Where(e => e.Properties.Any(p => p.Id == paperPropertyId));
-        // }
-        //
-        // // Apply pagination
         if (pageNumber > 0)
         {
             query = query.Skip(pageNumber * pageItems);
         }
-        //
-        // // Apply ordering
-        // switch (orderBy.ToLower())
-        // {
-        //     case "name":
-        //         query = query.OrderBy(e => e.Name);
-        //         break;
-        //     case "price":
-        //         query = query.OrderBy(e => e.Price);
-        //         break;
-        //     case "stock":
-        //         query = query.OrderBy(e => e.Stock);
-        //         break;
-        //     default:
-        //         query = query.OrderBy(e => e.Id);
-        //         break;
-        // }
-        //
-        // // Apply filter
-        // if (!string.IsNullOrEmpty(filter))
-        // {
-        //     // Add filter logic here if needed
-        // }
+
 
         return query
             .Take(pageItems)
@@ -125,6 +90,44 @@ public class PaperRepository : IRepository
         await _dataBaseContext.SaveChangesAsync();
         return new PaperProperties { PropId = newProperty.Id, PropName = newProperty.PropertyName };
     }
+
+    public async Task<PaperToDisplay> CreatePaperProduct(PaperToAdd paperToAdd)
+    {
+        var newPaper = new Paper
+        {
+            Name = paperToAdd.Name,
+            Discontinued = paperToAdd.Discontinued,
+            Stock = paperToAdd.Stock,
+            Price = paperToAdd.Price,
+            Properties = paperToAdd.PaperPropertiesList?.Select(p => new Property
+            {
+                Id = p.PropId,
+                PropertyName = p.PropName
+            }).ToList() ?? new List<Property>()
+        };
+
+        _dataBaseContext.Papers.Add(newPaper);
+        await _dataBaseContext.SaveChangesAsync();
+
+
+        var paperToDisplay = new PaperToDisplay
+        {
+            Id = newPaper.Id,
+            Name = newPaper.Name,
+            Discontinued = newPaper.Discontinued,
+            Stock = newPaper.Stock,
+            Price = newPaper.Price
+        };
+
+        paperToDisplay.IncludeProperties(newPaper.Properties.Select(p => new PaperProperties
+        {
+            PropId = p.Id,
+            PropName = p.PropertyName
+        }));
+
+        return paperToDisplay;
+    }
+
 
     //EDIT PAPER PROPERTY
     public async Task<PaperProperties> EditPaperProperty(PaperProperties paperProperties)
@@ -193,22 +196,24 @@ public class PaperRepository : IRepository
 
         if (paperToEdit == null)
         {
-            return false;  
+            return false;
         }
+
         var property = await _dataBaseContext.Properties.FindAsync(propertyId);
         if (property == null)
         {
-            return false; 
+            return false;
         }
+
         if (paperToEdit.Properties.Any(p => p.Id == propertyId))
         {
             return false;
         }
+
         paperToEdit.Properties.Add(property);
         await _dataBaseContext.SaveChangesAsync();
         return true;
     }
-
 
 
     public async Task<bool> EditPaper(PaperToDisplay paperToBeEdited)
@@ -218,6 +223,7 @@ public class PaperRepository : IRepository
         {
             return false;
         }
+
         paperToEdit.Name = paperToBeEdited.Name;
         paperToEdit.Discontinued = paperToBeEdited.Discontinued;
         paperToEdit.Stock = paperToBeEdited.Stock;
