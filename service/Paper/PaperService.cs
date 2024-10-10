@@ -91,4 +91,9 @@ public class PaperService :IPaperService
     {
         return _repository.AddPropertyToPaper(paperId, propertyId);
     }
+
+    public Task<PaperToDisplay> CreatePaperProduct(PaperToAdd paperToAdd)
+    {
+        return _repository.CreatePaperProduct(paperToAdd);
+    }
 }

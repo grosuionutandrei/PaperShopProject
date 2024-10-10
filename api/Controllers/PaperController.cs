@@ -172,7 +172,7 @@ public class PaperController : ControllerBase
 
     //create a new paper property
     [HttpPost]
-    [Route("/api/admin/createPaper")]
+    [Route("/api/admin/createProperty")]
     public async Task<ActionResult> CreateProperty([FromBody] CreatePropertyDto createPropertyDto)
     {
         if (!ModelState.IsValid)
@@ -181,6 +181,25 @@ public class PaperController : ControllerBase
         }
 
         var propertyCreated = await _paperService.CreatePaperProperty(createPropertyDto.PropertyName);
+        return Ok(propertyCreated);
+    }
+    
+    //Todo check if the properties exists in the database
+    [HttpPost]
+    [Route("/api/admin/createPaper")]
+    public async Task<ActionResult<PaperToDisplay>> CreatePaperProduct([FromBody] CreateProductDto createdProduct)
+    {
+
+        var receivedProduct = new PaperToAdd
+        {
+            Name = createdProduct.Name,
+            Discontinued = createdProduct.Discontinued,
+            Price = createdProduct.Price,
+            Stock = createdProduct.Stock,
+            PaperPropertiesList = createdProduct.PaperPropertiesList
+        };
+
+        var propertyCreated = await _paperService.CreatePaperProduct(receivedProduct);
         return Ok(propertyCreated);
     }
 

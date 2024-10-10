@@ -26,4 +26,5 @@ public interface IPaperService
      bool PropertyExistsAsync(int propertyId);
      Task<bool> RemovePropertyFromPaper(int paperId, int propertyId);
      Task<bool> AddPropertyToPaper(int paperId, int propertyId);
+     public Task<PaperToDisplay> CreatePaperProduct(PaperToAdd paperToAdd);
 }
