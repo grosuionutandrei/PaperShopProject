@@ -1,6 +1,3 @@
-It sounds like your PaperShopProject is a great way to showcase the skills you've learned so far. Here's a refined version of your description:
-PaperShopProject
-
 This project, created by Grosu Ionut Andrei, is a school project designed to test and apply the knowledge gained during the first part of the semester.
 
 Technologies Used:
