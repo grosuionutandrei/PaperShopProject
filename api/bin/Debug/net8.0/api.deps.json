@@ -226,16 +226,16 @@
         "dependencies": {
           "FluentValidation": "11.10.0",
           "Microsoft.EntityFrameworkCore": "8.0.8",
-          "Utilities": "1.0.0",
-          "infrastructure": "1.0.0"
+          "infrastructure": "1.0.0",
+          "utilities": "1.0.0"
         },
         "runtime": {
           "service.dll": {}
         }
       },
-      "Utilities/1.0.0": {
+      "utilities/1.0.0": {
         "runtime": {
-          "Utilities.dll": {}
+          "utilities.dll": {}
         }
       }
     }
@@ -431,7 +431,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Utilities/1.0.0": {
+    "utilities/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
