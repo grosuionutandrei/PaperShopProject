@@ -1,0 +1,6 @@
+{
+  "api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\api",
+  "infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\infrastructure",
+  "service, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\service",
+  "Utilities, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\Utilities"
+}

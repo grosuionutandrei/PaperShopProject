@@ -48,15 +48,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreatePropertyValidator>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add CORS setup (register CORS service)
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowOrigin",
-        builder => builder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-});
+
+
 var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -64,7 +57,7 @@ app.UseSwaggerUI();
 // Retrieve and log AppOptions
 var options = app.Services.GetRequiredService<IOptions<AppOptions>>().Value;
 Console.WriteLine("APP OPTIONS: " + JsonSerializer.Serialize(options));
-
+app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
 app.MapControllers();
 

@@ -2,7 +2,7 @@
 
 public class OrderMain
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
     public DateTime OrderDate { get; set; }
 

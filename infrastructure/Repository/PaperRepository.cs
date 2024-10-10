@@ -1,11 +1,10 @@
-﻿
-using infrastructure.Models;
+﻿using infrastructure.Models;
 using infrastructure.QuerryModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace infrastructure.Repository;
 
-public class PaperRepository: IRepository
+public class PaperRepository : IRepository
 {
     private readonly DataBaseContext _dataBaseContext;
 
@@ -14,27 +13,64 @@ public class PaperRepository: IRepository
         _dataBaseContext = db;
     }
 
-
-    public IEnumerable<PaperToDisplay>  GetPaper()
+    public async Task<IEnumerable<PaperToDisplay>> GetPapersByFilter(PaperFilterQuery filterPapers)
     {
-        return _dataBaseContext.Papers.Select(e =>new PaperToDisplay
+        var query = _dataBaseContext.Papers.AsQueryable();
+        if (filterPapers.pageNumber > 0)
         {
-         Id   = e.Id,
-         Discontinued = e.Discontinued,
-         Name=e.Name,
-         Price=e.Price,
-         Stock = e.Stock
-        }).ToList();
+            query = query.Skip(filterPapers.pageNumber * filterPapers.pageItems);
+        }
+
+        if (!String.IsNullOrEmpty(filterPapers.searchFilter))
+        {
+            string search = filterPapers.searchFilter.TrimStart().TrimEnd();
+            query = query.Where(p => p.Name.ToLower().Contains(search.ToLower()));
+        }
+
+        if (filterPapers.priceRange != null)
+        {
+            if (filterPapers.priceRange.minimumRange.HasValue)
+            {
+                query = query.Where(p => p.Price >= filterPapers.priceRange.minimumRange.Value);
+            }
+
+            if (filterPapers.priceRange.maximumRange.HasValue)
+            {
+                query = query.Where(p => p.Price <= filterPapers.priceRange.maximumRange.Value);
+            }
+        }
+
+        if (filterPapers.paperPropertiesIds != null && filterPapers.paperPropertiesIds.Any())
+        {
+            query = query.Where(p => p.Properties.Any(prop => filterPapers.paperPropertiesIds.Contains(prop.Id)));
+        }
+
+        query = query.Where(p => p.Discontinued != true);
+        var result = await query
+            .Take(filterPapers.pageItems)
+            .Select(e => new PaperToDisplay
+            {
+                Id = e.Id,
+                Discontinued = e.Discontinued,
+                Name = e.Name,
+                Price = e.Price,
+                Stock = e.Stock
+            }).ToListAsync();
+        Console.WriteLine(result);
+        return result;
     }
 
-    public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber, string searchTerm, int pageItems, string orderBy, string filter, int paperPropertyId)
+
+    public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber, int pageItems)
     {
-        Console.WriteLine(searchTerm);
         var query = _dataBaseContext.Papers.AsQueryable();
-        query = !string.IsNullOrEmpty(searchTerm) ? query.Where(e => e.Name.ToLower().Contains(searchTerm.ToLower())) : query;
-        query = paperPropertyId != 0 ? query.Where(e => e.Properties.Any(p => p.Id == paperPropertyId)) : query;
-        query = pageNumber > 0 ? query.Skip(pageNumber * pageItems):query; 
-        
+
+        if (pageNumber > 0)
+        {
+            query = query.Skip(pageNumber * pageItems);
+        }
+
+
         return query
             .Take(pageItems)
             .Select(e => new PaperToDisplay
@@ -49,11 +85,49 @@ public class PaperRepository: IRepository
 
     public async Task<PaperProperties> CreatePaperProperty(string propertyName)
     {
-        var newProperty = new Property{ PropertyName = propertyName};
+        var newProperty = new Property { PropertyName = propertyName };
         _dataBaseContext.Properties.Add(newProperty);
         await _dataBaseContext.SaveChangesAsync();
-        return new PaperProperties{PropId = newProperty.Id,PropName = newProperty.PropertyName};
+        return new PaperProperties { PropId = newProperty.Id, PropName = newProperty.PropertyName };
     }
+
+    public async Task<PaperToDisplay> CreatePaperProduct(PaperToAdd paperToAdd)
+    {
+        var newPaper = new Paper
+        {
+            Name = paperToAdd.Name,
+            Discontinued = paperToAdd.Discontinued,
+            Stock = paperToAdd.Stock,
+            Price = paperToAdd.Price,
+            Properties = paperToAdd.PaperPropertiesList?.Select(p => new Property
+            {
+                Id = p.PropId,
+                PropertyName = p.PropName
+            }).ToList() ?? new List<Property>()
+        };
+
+        _dataBaseContext.Papers.Add(newPaper);
+        await _dataBaseContext.SaveChangesAsync();
+
+
+        var paperToDisplay = new PaperToDisplay
+        {
+            Id = newPaper.Id,
+            Name = newPaper.Name,
+            Discontinued = newPaper.Discontinued,
+            Stock = newPaper.Stock,
+            Price = newPaper.Price
+        };
+
+        paperToDisplay.IncludeProperties(newPaper.Properties.Select(p => new PaperProperties
+        {
+            PropId = p.Id,
+            PropName = p.PropertyName
+        }));
+
+        return paperToDisplay;
+    }
+
 
     //EDIT PAPER PROPERTY
     public async Task<PaperProperties> EditPaperProperty(PaperProperties paperProperties)
@@ -75,22 +149,88 @@ public class PaperRepository: IRepository
         };
     }
 
-    public async Task<bool> EditPaper(PaperToDisplay paperToDisplay)
+
+    public bool PaperExistsAsync(int paperId)
     {
-        var paperToEdit = await _dataBaseContext.Papers.FindAsync(paperToDisplay.Id);
+        return _dataBaseContext.Papers.Any(p => p.Id == paperId);
+    }
+
+    public bool PropertyExistsAsync(int propertyId)
+    {
+        return _dataBaseContext.Properties.Any(p => p.Id == propertyId);
+    }
+
+    public async Task<bool> RemovePropertyFromPaper(int paperId, int propertyId)
+    {
+        // Use FirstOrDefault to avoid exceptions if paper is not found
+        var paper = _dataBaseContext.Papers
+            .Include(p => p.Properties) // Make sure properties are included
+            .FirstOrDefault(p => p.Id == paperId);
+
+        if (paper == null)
+        {
+            return false; // Paper not found
+        }
+
+        // Find the property in the paper's properties
+        var propertyToRemove = paper.Properties.FirstOrDefault(p => p.Id == propertyId);
+        if (propertyToRemove == null)
+        {
+            return false; // Property not found
+        }
+
+        // Remove the property from the paper
+        paper.Properties.Remove(propertyToRemove);
+
+        // Save changes to the database
+        await _dataBaseContext.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> AddPropertyToPaper(int paperId, int propertyId)
+    {
+        var paperToEdit = await _dataBaseContext.Papers
+            .Include(p => p.Properties)
+            .FirstOrDefaultAsync(p => p.Id == paperId);
 
         if (paperToEdit == null)
         {
             return false;
         }
-        
-        paperToEdit.Name = paperToDisplay.Name;
-        paperToDisplay.Discontinued = paperToDisplay.Discontinued;
-        paperToDisplay.Stock = paperToDisplay.Stock;
-        paperToDisplay.Price = paperToDisplay.Price;
+
+        var property = await _dataBaseContext.Properties.FindAsync(propertyId);
+        if (property == null)
+        {
+            return false;
+        }
+
+        if (paperToEdit.Properties.Any(p => p.Id == propertyId))
+        {
+            return false;
+        }
+
+        paperToEdit.Properties.Add(property);
+        await _dataBaseContext.SaveChangesAsync();
+        return true;
+    }
+
+
+    public async Task<bool> EditPaper(PaperToDisplay paperToBeEdited)
+    {
+        var paperToEdit = await _dataBaseContext.Papers.FindAsync(paperToBeEdited.Id);
+        if (paperToEdit == null)
+        {
+            return false;
+        }
+
+        paperToEdit.Name = paperToBeEdited.Name;
+        paperToEdit.Discontinued = paperToBeEdited.Discontinued;
+        paperToEdit.Stock = paperToBeEdited.Stock;
+        paperToEdit.Price = paperToBeEdited.Price;
         _dataBaseContext.Papers.Update(paperToEdit);
-       await _dataBaseContext.SaveChangesAsync();
-       return true;
+        await _dataBaseContext.SaveChangesAsync();
+        return true;
     }
 
     public async Task<bool> ArePaperObjectsEqual(int requestId)
@@ -102,29 +242,25 @@ public class PaperRepository: IRepository
         return paper != null;
     }
 
-    public async Task<PaperToDisplay> GetPaperById(int paperId)
+    public async Task<IEnumerable<PaperProperties>> GetPaperById(int paperId)
     {
-        var paperToDisplay = await _dataBaseContext.Papers
+        var paperProperties = await _dataBaseContext.Papers
             .Where(e => e.Id == paperId)
-            .Select(e => new PaperToDisplay
+            .SelectMany(p => p.Properties)
+            .Select(p => new PaperProperties()
             {
-                Id = e.Id,
-                Name = e.Name,
-                Discontinued = e.Discontinued,
-                Price = e.Price,
-                Stock = e.Stock
-            })
-            .FirstOrDefaultAsync();
-        return paperToDisplay ?? new PaperToDisplay();
+                PropId = p.Id,
+                PropName = p.PropertyName
+            }).ToListAsync();
+        return paperProperties;
     }
 
     public async Task<bool> DeletePaperById(int paperId)
     {
-        var requestPaper = await _dataBaseContext.Papers.Where(e => e.Id==paperId).FirstOrDefaultAsync();
-        if (requestPaper==null)
+        var requestPaper = await _dataBaseContext.Papers.Where(e => e.Id == paperId).FirstOrDefaultAsync();
+        if (requestPaper == null)
         {
             return false;
-          
         }
 
         _dataBaseContext.Papers.Remove(requestPaper);
@@ -132,13 +268,22 @@ public class PaperRepository: IRepository
         return true;
     }
 
-    public async Task<bool> DeletePaperProperty(int propertyId,string propertyName)
+    public async Task<PriceRange> GetPriceRange()
+    {
+        var priceMin = await _dataBaseContext.Papers.MinAsync(p => p.Price);
+        var priceMax = await _dataBaseContext.Papers.MaxAsync(p => p.Price);
+        return new PriceRange { minimumRange = priceMin, maximumRange = priceMax };
+    }
+
+
+    public async Task<bool> DeletePaperProperty(int propertyId, string propertyName)
     {
         var property = _dataBaseContext.Properties.FindAsync(propertyId);
         if (property.Result == null)
         {
             return false;
         }
+
         _dataBaseContext.Properties.Remove(property.Result!);
         await _dataBaseContext.SaveChangesAsync();
         return true;
@@ -150,8 +295,6 @@ public class PaperRepository: IRepository
         {
             PropId = p.Id,
             PropName = p.PropertyName
-
         }).ToList();
     }
 }
-

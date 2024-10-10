@@ -1,4 +1,6 @@
 ﻿
+using System.Collections;
+
 namespace infrastructure.QuerryModels;
 
 public class PaperToDisplay
@@ -12,5 +14,12 @@ public class PaperToDisplay
     public int Stock { get; set; }
 
     public double Price { get; set; }
+
+    public IEnumerable? PaperPropertiesList { get;set; }
     
+
+    public void IncludeProperties(IEnumerable<PaperProperties> propertiesList)
+    {
+        PaperPropertiesList = propertiesList;
+    }
 }

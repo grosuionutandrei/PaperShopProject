@@ -1,6 +1,6 @@
 ﻿namespace infrastructure.QuerryModels;
 
-public class OrderEntry
+public class OrderEntryQto
 {
     public int Id { get; set; }
     public string? PaperName { get; set; }
