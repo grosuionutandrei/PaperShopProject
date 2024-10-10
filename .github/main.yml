@@ -1,5 +1,4 @@
-﻿name: API tests with .NET + TestContainers
-
+﻿
 on:
   workflow_dispatch:
   push:

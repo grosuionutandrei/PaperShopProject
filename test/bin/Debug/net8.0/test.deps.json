@@ -1384,8 +1384,8 @@
         "dependencies": {
           "FluentValidation": "11.10.0",
           "Microsoft.EntityFrameworkCore": "8.0.8",
-          "infrastructure": "1.0.0",
-          "utilities": "1.0.0"
+          "Utilities": "1.0.0",
+          "infrastructure": "1.0.0"
         },
         "runtime": {
           "service.dll": {}
@@ -1394,12 +1394,12 @@
           "service.dll": {}
         }
       },
-      "utilities/1.0.0": {
+      "Utilities/1.0.0": {
         "runtime": {
-          "utilities.dll": {}
+          "Utilities.dll": {}
         },
         "compile": {
-          "utilities.dll": {}
+          "Utilities.dll": {}
         }
       },
       "Microsoft.AspNetCore.Antiforgery/8.0.0.0": {
@@ -3611,7 +3611,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "utilities/1.0.0": {
+    "Utilities/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
