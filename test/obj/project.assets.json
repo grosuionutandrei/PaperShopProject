@@ -3667,6 +3667,7 @@
       "Microsoft.Extensions.DependencyInjection >= 9.0.0-rc.2.24473.5",
       "Microsoft.NET.Test.Sdk >= 17.11.1",
       "Moq >= 4.20.72",
+      "Utilities >= 1.0.0",
       "api >= 1.0.0",
       "coverlet.collector >= 6.0.2",
       "infrastructure >= 1.0.0",
@@ -3711,6 +3712,9 @@
             },
             "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\service\\service.csproj": {
               "projectPath": "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\service\\service.csproj"
+            },
+            "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\Utilities\\Utilities.csproj": {
+              "projectPath": "D:\\thirdsemester\\CSharp\\3rd_semester_paper_shop\\Utilities\\Utilities.csproj"
             }
           }
         }

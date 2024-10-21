@@ -2,5 +2,5 @@
 
 public class Status
 {
-    public string? status;
+    public string? status { get; set; }
 }

@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\infrastructure\infrastructure.csproj" />
-    <ProjectReference Include="..\Utilities\utilities.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

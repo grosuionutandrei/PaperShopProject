@@ -4,3 +4,14 @@ api/docker-compose.yaml
 api/appsettings.json
 .env
 infrastructure/scaffold.sh
+# Ignore all obj directories (including subfolders)
+**/obj/
+
+# Ignore Rider project model files
+**/rider.project.model.nuget.info
+
+# Ignore AssemblyInfoInputs cache files
+**/*.AssemblyInfoInputs.cache
+
+# Ignore AssemblyReference cache files
+**/*.AssemblyReference.cache

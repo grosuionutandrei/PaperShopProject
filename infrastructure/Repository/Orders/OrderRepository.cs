@@ -117,6 +117,53 @@ public class OrderRepository : IOrderRepository
         return orders;
     }
 
+    public async  Task<IEnumerable<CustomerMain>> GetCustomers()
+    {
+        var customers = await _dataBaseContext.Customers.Select((c) => new CustomerMain
+        {
+            CustomerId = c.Id,
+            Name = c.Name,
+            Address = c.Address,
+            Email = c.Email,
+            PhoneNumber = c.Phone
+        }).ToListAsync();
+        return customers;
+    }
+
+    public async Task<bool> UpdateOrderStatus(string? statusStatus, int orderId)
+    {
+       
+        var orderExist = await _dataBaseContext.Orders
+            .Where(e => e.Id == orderId)
+            .FirstOrDefaultAsync();
+
+        if (orderExist == null)
+        {
+            return false; 
+        }
+
+    
+        if (string.IsNullOrEmpty(statusStatus))
+        {
+            return false; 
+        }
+
+        orderExist.Status = statusStatus;
+        
+        _dataBaseContext.Orders.Update(orderExist);
+        try
+        {
+            await _dataBaseContext.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating order status: {ex.Message}");
+            return false;
+        }
+    }
+
+
 
     public async Task<OrderMain> PlaceOrder(int customerId, OrderPlaced orderPlaced)
     {

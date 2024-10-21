@@ -11,4 +11,6 @@ public interface IOrderRepository
     Task<OrderMain> PlaceOrder(int customerId,OrderPlaced orderPlaced);
     Dictionary<int, double> GetProductsPrices(List<OrderEntryPlaced> orderEntries);
     Task<IEnumerable<OrderMain>> GetCustomerOrderHistory(int customerId);
+    Task<IEnumerable<CustomerMain>> GetCustomers();
+    Task<bool> UpdateOrderStatus(string? statusStatus,int orderId);
 }
