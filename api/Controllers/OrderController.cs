@@ -2,15 +2,17 @@
 using infrastructure.QuerryModels;
 using Microsoft.AspNetCore.Mvc;
 using service.Orders;
+using utilities.ErrorMessages;
 
 namespace api.Controllers;
+
 [ApiController]
-public class OrderController:ControllerBase
+public class OrderController : ControllerBase
 {
     private IOrderService _orderService;
     private readonly ILogger<OrderController> _logger;
 
-    public OrderController(IOrderService service,ILogger<OrderController> logger)
+    public OrderController(IOrderService service, ILogger<OrderController> logger)
     {
         _orderService = service;
         _logger = logger;
@@ -25,37 +27,42 @@ public class OrderController:ControllerBase
         {
             return NotFound(results);
         }
+
         return Ok(results);
     }
 
 
     [HttpGet]
     [Route("/api/order/{orderId}/orderentries")]
-    public async Task<ActionResult<IEnumerable<OrderEntryQto>>> GetEntriesForOrder([FromRoute ] int orderId)
+    public async Task<ActionResult<IEnumerable<OrderEntryQto>>> GetEntriesForOrder([FromRoute] int orderId)
     {
         var results = await _orderService.GetEntriesForOrder(orderId);
         if (!results.Any())
         {
             return NotFound(results);
         }
+
         return Ok(results);
     }
 
     [HttpPatch]
     [Route("/api/order/edit/{orderId}")]
-    public async Task<ActionResult<bool>> ChangeOrderStatus([FromRoute] IdentificationDto orderId,[FromQuery] string status)
+    public async Task<ActionResult<bool>> ChangeOrderStatus([FromRoute] IdentificationDto orderId,
+        [FromQuery] string status)
     {
-        var statusModified = await _orderService.ModifyOrderStatus(orderId.Id,status);
+        var statusModified = await _orderService.ModifyOrderStatus(orderId.Id, status);
         if (!statusModified)
         {
             return BadRequest(statusModified);
         }
+
         return Ok(statusModified);
     }
 
     [HttpPost]
     [Route("/api/customer/{customerId}/placeOrder")]
-    public async Task<ActionResult<OrderMain>> PlaceOrder([FromRoute] int customerId,[FromBody] OrderPlacedDto orderPlaced)
+    public async Task<ActionResult<OrderMain>> PlaceOrder([FromRoute] int customerId,
+        [FromBody] OrderPlacedDto orderPlaced)
     {
         var orderPlacedEntries = orderPlaced.OrderPlacedProducts!
             .Select(e => new OrderEntryPlaced
@@ -63,11 +70,11 @@ public class OrderController:ControllerBase
                 ProductId = e.ProductId,
                 Quantity = e.Quantity
             }).ToList();
-        var placeOrder = await _orderService.PlaceOrder(customerId,orderPlacedEntries);
+        var placeOrder = await _orderService.PlaceOrder(customerId, orderPlacedEntries);
         return placeOrder;
     }
-    
-    
+
+
     /// <summary>
     /// Get order history for a customer.
     /// </summary>
@@ -75,11 +82,40 @@ public class OrderController:ControllerBase
     /// 
     [HttpGet]
     [Route("/customer/{customerId}/history")]
-    public async Task<ActionResult<IEnumerable<OrderMain>>> GetCustomerOrderHistory([FromRoute] int customerId )
+    public async Task<ActionResult<IEnumerable<OrderMain>>> GetCustomerOrderHistory([FromRoute] int customerId)
     {
-        var customerHistory =await _orderService.GetCustomerOrderHistory(customerId);
-        return Ok(customerHistory );
+        var customerHistory = await _orderService.GetCustomerOrderHistory(customerId);
+        return Ok(customerHistory);
     }
-    
-    
+
+    [HttpGet]
+    [Route("/api/admin/customers")]
+    public async Task<ActionResult<IEnumerable<CustomerMain>>> GetAllCustomers()
+    {
+        var customers = await _orderService.GetCustomers();
+        return Ok(customers);
+    }
+
+
+    [HttpPatch]
+    [Route("/api/admin/customers/orders/{orderId}/update")]
+    public async Task<ActionResult<bool>> UpdateOrderStatus([FromRoute] int orderId, [FromBody] Status status)
+    {
+        var updated = await _orderService.UpdateOrderStatus(status.status, orderId);
+
+        if (!updated)
+        {
+            return BadRequest(new
+            {
+                success = false,
+                message = ("Fail")
+            });
+        }
+
+        return Ok(new
+        {
+            success = true,
+            message = "Order status updated successfully."
+        });
+    }
 }

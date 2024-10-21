@@ -213,12 +213,12 @@ public class PaperController : ControllerBase
             PropId = editPaperPropertyDto.PropertyId,
             PropName = editPaperPropertyDto.PropName
         };
-        var editedProperty = _paperService.EditPaperProperty(propertyToEdit);
+        var editedProperty = await _paperService.EditPaperProperty(propertyToEdit);
         return Ok(editedProperty);
     }
 
     //delete paper property
-    [HttpPatch]
+    [HttpDelete]
     [Route("/api/admin/deletePaperPropriety")]
     public async Task<ActionResult> DeleteProperty([FromBody] EditPaperPropertyDto editPaperPropertyDto)
     {

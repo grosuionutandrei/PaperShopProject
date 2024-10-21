@@ -68,4 +68,19 @@ public class OrderService:IOrderService
     {
         return _repository.GetCustomerOrderHistory(customerId);
     }
+
+    public Task<IEnumerable<CustomerMain>> GetCustomers()
+    {
+        return _repository.GetCustomers();
+    }
+
+    public bool ValidateStatus(string orderStatus)
+    {
+        return OrderStatusMessage.IsStatusValid(orderStatus);
+    }
+
+    public Task<bool> UpdateOrderStatus(string? statusStatus,int orderId)
+    {
+        return _repository.UpdateOrderStatus(statusStatus,orderId);
+    }
 }
