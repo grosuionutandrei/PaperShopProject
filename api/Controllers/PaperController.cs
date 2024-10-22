@@ -1,11 +1,8 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using System.Text.Json;
+﻿using System.Text.Json;
 using api.TransferModels;
 using api.TransferModels.Response;
 using infrastructure.QuerryModels;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using service.Paper;
 using utilities.ErrorMessages;
 
@@ -43,22 +40,13 @@ public class PaperController : ControllerBase
         _logger.Log(LogLevel.Critical, JsonSerializer.Serialize(paperFilterDto));
 
         // Check if the paperFilterDto is null
-        if (paperFilterDto == null)
-        {
-            return BadRequest("PaperFilterDto cannot be null.");
-        }
+        if (paperFilterDto == null) return BadRequest("PaperFilterDto cannot be null.");
 
         // Check if pagination is null
-        if (paperFilterDto.pagination == null)
-        {
-            return BadRequest("Pagination cannot be null.");
-        }
+        if (paperFilterDto.pagination == null) return BadRequest("Pagination cannot be null.");
 
         // Check if priceRange is null
-        if (paperFilterDto.priceRange == null)
-        {
-            return BadRequest("PriceRange cannot be null.");
-        }
+        if (paperFilterDto.priceRange == null) return BadRequest("PriceRange cannot be null.");
 
         var filterPapers = new PaperFilterQuery
         {
@@ -101,10 +89,7 @@ public class PaperController : ControllerBase
             Name = editPaperDto.Name
         };
         var editedPaper = await _paperService.EditPaper(paperToEdit);
-        if (editedPaper)
-        {
-            return new OkObjectResult(editPaperDto);
-        }
+        if (editedPaper) return new OkObjectResult(editPaperDto);
 
         return new NotFoundObjectResult(new
             { Error = ErrorMessages.GetMessage(ErrorCode.PropertyNotFound), Data = editPaperDto });
@@ -120,7 +105,7 @@ public class PaperController : ControllerBase
 
         return Ok(result);
     }
-    
+
     [HttpPatch]
     [Route("api/papers/edit/{paperId}/properties/{propertyId}")]
     public async Task<ActionResult<bool>> AddPropertyToPaper([FromRoute] RemovePropertyDto removePropertyDto)
@@ -144,7 +129,7 @@ public class PaperController : ControllerBase
 
 
     /// <summary>
-    /// Delete the paper by id.
+    ///     Delete the paper by id.
     /// </summary>
     /// <value>The paper's unique identifier.</value>
     [HttpDelete]
@@ -152,10 +137,7 @@ public class PaperController : ControllerBase
     public async Task<ActionResult<bool>> DeletePaper(int paperId)
     {
         var isDeleted = await _paperService.DeletePaperById(paperId);
-        if (!isDeleted)
-        {
-            return NotFound(isDeleted);
-        }
+        if (!isDeleted) return NotFound(isDeleted);
 
         return Ok(isDeleted);
     }
@@ -175,21 +157,17 @@ public class PaperController : ControllerBase
     [Route("/api/admin/createProperty")]
     public async Task<ActionResult> CreateProperty([FromBody] CreatePropertyDto createPropertyDto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var propertyCreated = await _paperService.CreatePaperProperty(createPropertyDto.PropertyName);
         return Ok(propertyCreated);
     }
-    
+
     //Todo check if the properties exists in the database
     [HttpPost]
     [Route("/api/admin/createPaper")]
     public async Task<ActionResult<PaperToDisplay>> CreatePaperProduct([FromBody] CreateProductDto createdProduct)
     {
-
         var receivedProduct = new PaperToAdd
         {
             Name = createdProduct.Name,

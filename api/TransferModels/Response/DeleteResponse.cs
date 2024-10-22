@@ -1,14 +1,10 @@
-﻿using infrastructure;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace api.TransferModels.Response;
 
 public class DeletePropertyResponse
 {
-    private bool isDeleted { get; set; }
-    private EditPaperPropertyDto _deleteDto;
+    private readonly EditPaperPropertyDto _deleteDto;
 
     public DeletePropertyResponse(bool val, EditPaperPropertyDto deletePaperPropertyDto)
     {
@@ -16,12 +12,11 @@ public class DeletePropertyResponse
         _deleteDto = deletePaperPropertyDto;
     }
 
+    private bool isDeleted { get; }
+
     public ActionResult ConstructDeleteResponse(string message)
     {
-        if (isDeleted)
-        {
-            return new OkObjectResult(_deleteDto);
-        }
+        if (isDeleted) return new OkObjectResult(_deleteDto);
 
         return new NotFoundObjectResult(new { Error = message, Data = _deleteDto });
     }

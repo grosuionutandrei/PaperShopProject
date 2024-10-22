@@ -2,7 +2,6 @@
 using api.Validators;
 using FluentValidation.TestHelper;
 using utilities.ErrorMessages;
-using Xunit;
 
 public class EditPropertyValidatorTests
 {
@@ -37,7 +36,7 @@ public class EditPropertyValidatorTests
         // Arrange
         var editPropertyDto = new EditPaperPropertyDto
         {
-            PropertyId = 0, 
+            PropertyId = 0,
             PropName = "Valid Property Name"
         };
 
@@ -58,7 +57,7 @@ public class EditPropertyValidatorTests
         var editPropertyDto = new EditPaperPropertyDto
         {
             PropertyId = 1,
-            PropName = propName 
+            PropName = propName
         };
 
         // Act

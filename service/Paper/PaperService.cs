@@ -1,11 +1,9 @@
-﻿
-using infrastructure.QuerryModels;
+﻿using infrastructure.QuerryModels;
 using infrastructure.Repository;
-
 
 namespace service.Paper;
 
-public class PaperService :IPaperService
+public class PaperService : IPaperService
 {
     private readonly IRepository _repository;
 
@@ -15,9 +13,9 @@ public class PaperService :IPaperService
     }
 
 
-    public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber,int pageItems)
+    public IEnumerable<PaperToDisplay> GetPaperWithQuerries(int pageNumber, int pageItems)
     {
-        return _repository.GetPaperWithQuerries(pageNumber,pageItems);
+        return _repository.GetPaperWithQuerries(pageNumber, pageItems);
     }
 
     public IEnumerable<PaperProperties> GetPaperProprieties()
@@ -25,11 +23,10 @@ public class PaperService :IPaperService
         return _repository.GetPaperProprieties();
     }
 
-    public  Task<bool> EditPaper(PaperToDisplay paperToDisplay)
+    public Task<bool> EditPaper(PaperToDisplay paperToDisplay)
     {
         return _repository.EditPaper(paperToDisplay);
     }
-
 
 
     public Task<PaperProperties> CreatePaperProperty(string propertyName)
@@ -42,9 +39,9 @@ public class PaperService :IPaperService
         return _repository.EditPaperProperty(paperProperties);
     }
 
-    public Task<bool> DeletePaperProperty(int propertyId,string propertyName)
+    public Task<bool> DeletePaperProperty(int propertyId, string propertyName)
     {
-        return _repository.DeletePaperProperty(propertyId,propertyName);
+        return _repository.DeletePaperProperty(propertyId, propertyName);
     }
 
     public Task<bool> ArePaperObjectsEqual(int requestId)
@@ -84,7 +81,7 @@ public class PaperService :IPaperService
 
     public Task<bool> RemovePropertyFromPaper(int paperId, int propertyId)
     {
-        return _repository.RemovePropertyFromPaper(paperId,propertyId);
+        return _repository.RemovePropertyFromPaper(paperId, propertyId);
     }
 
     public Task<bool> AddPropertyToPaper(int paperId, int propertyId)

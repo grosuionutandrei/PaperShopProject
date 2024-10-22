@@ -1,16 +1,16 @@
 ﻿using api.Controllers;
+using api.TransferModels;
+using infrastructure.QuerryModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using api.TransferModels;
-using infrastructure.QuerryModels;
 using service.Orders;
 
 public class OrderControllerTests
 {
-    private readonly Mock<IOrderService> _mockOrderService;
-    private readonly Mock<ILogger<OrderController>> _mockLogger;
     private readonly OrderController _controller;
+    private readonly Mock<ILogger<OrderController>> _mockLogger;
+    private readonly Mock<IOrderService> _mockOrderService;
 
     public OrderControllerTests()
     {
@@ -24,7 +24,7 @@ public class OrderControllerTests
     {
         // Arrange
         var customerId = 1;
-        var orders = new List<OrderMain> { new OrderMain { Id = 1, Status = "Completed" } };
+        var orders = new List<OrderMain> { new() { Id = 1, Status = "Completed" } };
         _mockOrderService.Setup(service => service.GetOrdersByCustomerId(customerId)).ReturnsAsync(orders);
 
         // Act
@@ -41,7 +41,8 @@ public class OrderControllerTests
     {
         // Arrange
         var customerId = 1;
-        _mockOrderService.Setup(service => service.GetOrdersByCustomerId(customerId)).ReturnsAsync(new List<OrderMain>());
+        _mockOrderService.Setup(service => service.GetOrdersByCustomerId(customerId))
+            .ReturnsAsync(new List<OrderMain>());
 
         // Act
         var result = await _controller.GetOrderByCustomerId(customerId);
@@ -56,7 +57,7 @@ public class OrderControllerTests
     {
         // Arrange
         var orderId = 1;
-        var orderEntries = new List<OrderEntryQto> { new OrderEntryQto { Id = 1, OrderQuantity = 5 } };
+        var orderEntries = new List<OrderEntryQto> { new() { Id = 1, OrderQuantity = 5 } };
         _mockOrderService.Setup(service => service.GetEntriesForOrder(orderId)).ReturnsAsync(orderEntries);
 
         // Act
@@ -114,13 +115,13 @@ public class OrderControllerTests
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
         Assert.False((bool)badRequestResult.Value);
     }
-    
+
     [Fact]
     public async Task GetCustomerOrderHistory_ShouldReturnOk_WhenHistoryExists()
     {
         // Arrange
         var customerId = 1;
-        var orderHistory = new List<OrderMain> { new OrderMain { Id = 1, Status = "Completed" } };
+        var orderHistory = new List<OrderMain> { new() { Id = 1, Status = "Completed" } };
         _mockOrderService.Setup(service => service.GetCustomerOrderHistory(customerId)).ReturnsAsync(orderHistory);
 
         // Act
@@ -131,6 +132,7 @@ public class OrderControllerTests
         var returnedHistory = Assert.IsAssignableFrom<IEnumerable<OrderMain>>(okResult.Value);
         Assert.Single(returnedHistory);
     }
+
     [Fact]
     public async Task PlaceOrder_ShouldReturnOrder_WhenOrderIsPlacedSuccessfully()
     {
@@ -140,11 +142,12 @@ public class OrderControllerTests
         {
             OrderPlacedProducts = new List<OrderEntryPlacedDto>
             {
-                new OrderEntryPlacedDto { ProductId = 1, Quantity = 2 }
+                new() { ProductId = 1, Quantity = 2 }
             }
         };
         var placedOrder = new OrderMain { Id = 1, Status = "Pending" };
-        _mockOrderService.Setup(service => service.PlaceOrder(customerId, It.IsAny<List<OrderEntryPlaced>>())).ReturnsAsync(placedOrder);
+        _mockOrderService.Setup(service => service.PlaceOrder(customerId, It.IsAny<List<OrderEntryPlaced>>()))
+            .ReturnsAsync(placedOrder);
 
         // Act
         var result = await _controller.PlaceOrder(customerId, orderPlacedDto);

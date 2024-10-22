@@ -10,5 +10,5 @@ public class PaperToAdd
 
     public double Price { get; set; }
 
-    public IEnumerable<PaperProperties>? PaperPropertiesList { get;set; }
+    public IEnumerable<PaperProperties>? PaperPropertiesList { get; set; }
 }

@@ -4,7 +4,6 @@ using Moq;
 using service.Paper;
 using utilities.ErrorMessages;
 
-
 public class EditPaperValidatorTests
 {
     private readonly Mock<IPaperService> _mockPaperService;
@@ -50,7 +49,7 @@ public class EditPaperValidatorTests
         var editPaperDto = new EditPaperDto
         {
             Id = 1,
-            Name = name, 
+            Name = name,
             Price = 20.0,
             Stock = 10,
             Discontinued = true
@@ -61,7 +60,8 @@ public class EditPaperValidatorTests
 
         // Assert
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Name" && e.ErrorMessage == ErrorMessages.GetMessage(ErrorCode.ErrorName));
+        Assert.Contains(result.Errors,
+            e => e.PropertyName == "Name" && e.ErrorMessage == ErrorMessages.GetMessage(ErrorCode.ErrorName));
     }
 
     [Theory]
@@ -76,7 +76,7 @@ public class EditPaperValidatorTests
         {
             Id = 1,
             Name = "Valid Paper",
-            Price = 0, 
+            Price = 0,
             Stock = 10,
             Discontinued = true
         };
@@ -86,7 +86,8 @@ public class EditPaperValidatorTests
 
         // Assert
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Price" && e.ErrorMessage == ErrorMessages.GetMessage(ErrorCode.Price));
+        Assert.Contains(result.Errors,
+            e => e.PropertyName == "Price" && e.ErrorMessage == ErrorMessages.GetMessage(ErrorCode.Price));
     }
 
     [Fact]
@@ -100,7 +101,7 @@ public class EditPaperValidatorTests
             Id = 1,
             Name = "Valid Paper",
             Price = 20.0,
-            Stock = -1, 
+            Stock = -1,
             Discontinued = true
         };
 
@@ -109,7 +110,8 @@ public class EditPaperValidatorTests
 
         // Assert
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Stock" && e.ErrorMessage == ErrorMessages.GetMessage(ErrorCode.Stock));
+        Assert.Contains(result.Errors,
+            e => e.PropertyName == "Stock" && e.ErrorMessage == ErrorMessages.GetMessage(ErrorCode.Stock));
     }
 
     [Fact]
@@ -132,6 +134,7 @@ public class EditPaperValidatorTests
 
         // Assert
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Id" && e.ErrorMessage == ErrorMessages.GetMessage(ErrorCode.IdNotEqual));
+        Assert.Contains(result.Errors,
+            e => e.PropertyName == "Id" && e.ErrorMessage == ErrorMessages.GetMessage(ErrorCode.IdNotEqual));
     }
 }

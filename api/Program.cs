@@ -4,14 +4,12 @@ using api.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using infrastructure;
-using infrastructure.Models;
 using infrastructure.Repository;
 using infrastructure.Repository.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using service.Orders;
 using service.Paper;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +24,7 @@ builder.Services.AddOptionsWithValidateOnStart<AppOptions>()
 builder.Services.AddDbContext<DataBaseContext>((serviceProvider, options) =>
 {
     var appOptions = serviceProvider.GetRequiredService<IOptions<AppOptions>>().Value;
-    options.UseNpgsql(Environment.GetEnvironmentVariable("DbConnectionString") 
+    options.UseNpgsql(Environment.GetEnvironmentVariable("DbConnectionString")
                       ?? appOptions.DbConnectionString);
     options.EnableSensitiveDataLogging();
 });
@@ -47,7 +45,6 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreatePropertyValidator>();
 // Add services for Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 
 
 var app = builder.Build();

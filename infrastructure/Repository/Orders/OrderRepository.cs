@@ -1,5 +1,4 @@
-﻿
-using infrastructure.Models;
+﻿using infrastructure.Models;
 using infrastructure.QuerryModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,7 +6,6 @@ namespace infrastructure.Repository.Orders;
 
 public class OrderRepository : IOrderRepository
 {
-
     private readonly DataBaseContext _dataBaseContext;
 
     public OrderRepository(DataBaseContext db)
@@ -16,14 +14,10 @@ public class OrderRepository : IOrderRepository
     }
 
 
-
     public async Task<IEnumerable<OrderMain>> GetOrdersByCustomerId(int customerId)
     {
         var isCustomer = await _dataBaseContext.Customers.Where(e => e.Id == customerId).FirstOrDefaultAsync();
-        if (isCustomer != null && isCustomer!.Id != customerId)
-        {
-            return new List<OrderMain>();
-        }
+        if (isCustomer != null && isCustomer!.Id != customerId) return new List<OrderMain>();
 
         var customerOrders = await _dataBaseContext.Orders.Where(e => e.CustomerId == customerId)
             .Where(e => e.Deleted != true)
@@ -34,7 +28,6 @@ public class OrderRepository : IOrderRepository
                 DeliveryDate = e.DeliveryDate,
                 Status = e.Status,
                 TotalAmount = e.TotalAmount
-
             })
             .ToListAsync();
         return customerOrders;
@@ -43,12 +36,8 @@ public class OrderRepository : IOrderRepository
 
     public async Task<IEnumerable<OrderEntryQto>> GetEntriesForOrder(int orderId)
     {
-
         var order = await _dataBaseContext.Orders.Where(e => e.Id == orderId).FirstOrDefaultAsync();
-        if (order == null)
-        {
-            return new List<OrderEntryQto>();
-        }
+        if (order == null) return new List<OrderEntryQto>();
 
         var orderEntries = await _dataBaseContext.OrderEntries.Where(e => e.OrderId == orderId)
             .Select(e => new OrderEntryQto
@@ -62,47 +51,36 @@ public class OrderRepository : IOrderRepository
                     PropId = p.Id,
                     PropName = p.PropertyName
                 })
-
             }).ToListAsync();
         return orderEntries;
-
     }
 
     public async Task<bool> ModifyOrderStatus(int orderId, string status)
     {
         var orderToModify = await _dataBaseContext.Orders.Where(e => e.Id == orderId).FirstOrDefaultAsync();
-        if (orderToModify == null)
-        {
-            return false;
-        }
+        if (orderToModify == null) return false;
 
         orderToModify.Status = status;
-         _dataBaseContext.Orders.Update(orderToModify);
-         await _dataBaseContext.SaveChangesAsync();
+        _dataBaseContext.Orders.Update(orderToModify);
+        await _dataBaseContext.SaveChangesAsync();
         return true;
     }
 
-    public  Dictionary<int, double> GetProductsPrices(List<OrderEntryPlaced> orderEntries)
+    public Dictionary<int, double> GetProductsPrices(List<OrderEntryPlaced> orderEntries)
     {
-        Dictionary<int, double> paperPrices = new Dictionary<int, double>();
+        var paperPrices = new Dictionary<int, double>();
         var productsIds = orderEntries.Select(p => p.ProductId).ToList();
         var productPrices = _dataBaseContext.Papers.Where(p => productsIds.Contains(p.Id))
             .Select(p => new { p.Id, p.Price }).ToList();
-        foreach (var product in productPrices)
-        {
-            paperPrices[product.Id] = product.Price;
-        }
+        foreach (var product in productPrices) paperPrices[product.Id] = product.Price;
 
         return paperPrices;
     }
 
     public async Task<IEnumerable<OrderMain>> GetCustomerOrderHistory(int customerId)
     {
-        var customer = await _dataBaseContext.Customers.Where(e=>e.Id==customerId).FirstOrDefaultAsync();
-        if (customer==null)
-        {
-            return new List<OrderMain>();
-        }
+        var customer = await _dataBaseContext.Customers.Where(e => e.Id == customerId).FirstOrDefaultAsync();
+        if (customer == null) return new List<OrderMain>();
 
         var orders = await _dataBaseContext.Orders.Where(e => e.CustomerId == customerId)
             .Select(e => new OrderMain
@@ -117,9 +95,9 @@ public class OrderRepository : IOrderRepository
         return orders;
     }
 
-    public async  Task<IEnumerable<CustomerMain>> GetCustomers()
+    public async Task<IEnumerable<CustomerMain>> GetCustomers()
     {
-        var customers = await _dataBaseContext.Customers.Select((c) => new CustomerMain
+        var customers = await _dataBaseContext.Customers.Select(c => new CustomerMain
         {
             CustomerId = c.Id,
             Name = c.Name,
@@ -132,24 +110,17 @@ public class OrderRepository : IOrderRepository
 
     public async Task<bool> UpdateOrderStatus(string? statusStatus, int orderId)
     {
-       
         var orderExist = await _dataBaseContext.Orders
             .Where(e => e.Id == orderId)
             .FirstOrDefaultAsync();
 
-        if (orderExist == null)
-        {
-            return false; 
-        }
+        if (orderExist == null) return false;
 
-    
-        if (string.IsNullOrEmpty(statusStatus))
-        {
-            return false; 
-        }
+
+        if (string.IsNullOrEmpty(statusStatus)) return false;
 
         orderExist.Status = statusStatus;
-        
+
         _dataBaseContext.Orders.Update(orderExist);
         try
         {
@@ -164,17 +135,13 @@ public class OrderRepository : IOrderRepository
     }
 
 
-
     public async Task<OrderMain> PlaceOrder(int customerId, OrderPlaced orderPlaced)
     {
         using var transaction = await _dataBaseContext.Database.BeginTransactionAsync();
         try
         {
             var customer = await _dataBaseContext.Customers.Where(e => e.Id == customerId).FirstOrDefaultAsync();
-            if (customer == null)
-            {
-                return new OrderMain();
-            }
+            if (customer == null) return new OrderMain();
 
             var newOrder = new Order
             {
@@ -183,7 +150,7 @@ public class OrderRepository : IOrderRepository
                 Status = orderPlaced.Status,
                 TotalAmount = orderPlaced.TotalAmount,
                 CustomerId = customerId,
-                Deleted = orderPlaced.Deleted,
+                Deleted = orderPlaced.Deleted
             };
 
             await _dataBaseContext.Orders.AddAsync(newOrder);

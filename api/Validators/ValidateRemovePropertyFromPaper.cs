@@ -7,7 +7,7 @@ namespace api.Validators;
 
 public class ValidateRemovePropertyFromPaper : AbstractValidator<RemovePropertyDto>
 {
-    private IPaperService _paperService;
+    private readonly IPaperService _paperService;
 
     public ValidateRemovePropertyFromPaper(IPaperService paperService)
     {
@@ -20,11 +20,11 @@ public class ValidateRemovePropertyFromPaper : AbstractValidator<RemovePropertyD
 
     private bool PaperExist(int paperId)
     {
-        return  _paperService.PaperExistsAsync(paperId);
+        return _paperService.PaperExistsAsync(paperId);
     }
 
     private bool PropertyExist(int propertyId)
     {
-        return  _paperService.PropertyExistsAsync(propertyId);
+        return _paperService.PropertyExistsAsync(propertyId);
     }
 }
