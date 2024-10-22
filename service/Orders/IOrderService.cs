@@ -10,10 +10,10 @@ public interface IOrderService
     Task<OrderMain> GetAllOrdersPaginated(int pageNumber, int itemsPerPage);
 
     Task<bool> ModifyOrderStatus(int orderId, string status);
-    Task<OrderMain> PlaceOrder(int customerId,List<OrderEntryPlaced> orderEntries);
+    Task<OrderMain> PlaceOrder(int customerId, List<OrderEntryPlaced> orderEntries);
     Task<IEnumerable<OrderMain>> GetCustomerOrderHistory(int customerId);
     Task<IEnumerable<CustomerMain>> GetCustomers();
 
     bool ValidateStatus(string orderStatus);
-    Task<bool> UpdateOrderStatus(string? statusStatus,int orderId);
+    Task<bool> UpdateOrderStatus(string? statusStatus, int orderId);
 }

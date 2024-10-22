@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace infrastructure.Models;
 
-namespace infrastructure.Models;
-
-public partial class Customer
+public class Customer
 {
     public int Id { get; set; }
 

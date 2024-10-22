@@ -4,7 +4,7 @@ using utilities.ErrorMessages;
 
 namespace api.Validators;
 
-public class CreateProductValidator:AbstractValidator<CreateProductDto>
+public class CreateProductValidator : AbstractValidator<CreateProductDto>
 {
     public CreateProductValidator()
     {

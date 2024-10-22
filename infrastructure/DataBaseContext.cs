@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
-using infrastructure.Models;
 
 namespace infrastructure;
 
-public partial class DataBaseContext : Microsoft.EntityFrameworkCore.DbContext
+public partial class DataBaseContext : DbContext
 {
     public DataBaseContext(DbContextOptions<DataBaseContext> options)
         : base(options)

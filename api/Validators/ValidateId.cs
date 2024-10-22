@@ -4,7 +4,7 @@ using utilities.ErrorMessages;
 
 namespace api.Validators;
 
-public class ValidateId:AbstractValidator<IdentificationDto>
+public class ValidateId : AbstractValidator<IdentificationDto>
 {
     public ValidateId()
     {

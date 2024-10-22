@@ -8,5 +8,4 @@ public class AppOptionsValidator : AbstractValidator<AppOptions>
     {
         RuleFor(x => x.DbConnectionString).NotEmpty();
     }
-    
 }

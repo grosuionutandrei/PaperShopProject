@@ -2,15 +2,14 @@
 using infrastructure.QuerryModels;
 using Microsoft.AspNetCore.Mvc;
 using service.Orders;
-using utilities.ErrorMessages;
 
 namespace api.Controllers;
 
 [ApiController]
 public class OrderController : ControllerBase
 {
-    private IOrderService _orderService;
     private readonly ILogger<OrderController> _logger;
+    private readonly IOrderService _orderService;
 
     public OrderController(IOrderService service, ILogger<OrderController> logger)
     {
@@ -23,11 +22,7 @@ public class OrderController : ControllerBase
     public async Task<ActionResult<IEnumerable<OrderMain>>> GetOrderByCustomerId([FromRoute] int customerId)
     {
         var results = await _orderService.GetOrdersByCustomerId(customerId);
-        if (!results.Any())
-        {
-            return NotFound(results);
-        }
-
+        if (!results.Any()) return NotFound(results);
         return Ok(results);
     }
 
@@ -37,10 +32,7 @@ public class OrderController : ControllerBase
     public async Task<ActionResult<IEnumerable<OrderEntryQto>>> GetEntriesForOrder([FromRoute] int orderId)
     {
         var results = await _orderService.GetEntriesForOrder(orderId);
-        if (!results.Any())
-        {
-            return NotFound(results);
-        }
+        if (!results.Any()) return NotFound(results);
 
         return Ok(results);
     }
@@ -51,10 +43,7 @@ public class OrderController : ControllerBase
         [FromQuery] string status)
     {
         var statusModified = await _orderService.ModifyOrderStatus(orderId.Id, status);
-        if (!statusModified)
-        {
-            return BadRequest(statusModified);
-        }
+        if (!statusModified) return BadRequest(statusModified);
 
         return Ok(statusModified);
     }
@@ -76,10 +65,9 @@ public class OrderController : ControllerBase
 
 
     /// <summary>
-    /// Get order history for a customer.
+    ///     Get order history for a customer.
     /// </summary>
     /// <value>.</value>
-    /// 
     [HttpGet]
     [Route("/customer/{customerId}/history")]
     public async Task<ActionResult<IEnumerable<OrderMain>>> GetCustomerOrderHistory([FromRoute] int customerId)
@@ -104,13 +92,11 @@ public class OrderController : ControllerBase
         var updated = await _orderService.UpdateOrderStatus(status.status, orderId);
 
         if (!updated)
-        {
             return BadRequest(new
             {
                 success = false,
-                message = ("Fail")
+                message = "Fail"
             });
-        }
 
         return Ok(new
         {

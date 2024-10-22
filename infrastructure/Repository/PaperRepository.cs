@@ -16,34 +16,25 @@ public class PaperRepository : IRepository
     public async Task<IEnumerable<PaperToDisplay>> GetPapersByFilter(PaperFilterQuery filterPapers)
     {
         var query = _dataBaseContext.Papers.AsQueryable();
-        if (filterPapers.pageNumber > 0)
-        {
-            query = query.Skip(filterPapers.pageNumber * filterPapers.pageItems);
-        }
+        if (filterPapers.pageNumber > 0) query = query.Skip(filterPapers.pageNumber * filterPapers.pageItems);
 
-        if (!String.IsNullOrEmpty(filterPapers.searchFilter))
+        if (!string.IsNullOrEmpty(filterPapers.searchFilter))
         {
-            string search = filterPapers.searchFilter.TrimStart().TrimEnd();
+            var search = filterPapers.searchFilter.TrimStart().TrimEnd();
             query = query.Where(p => p.Name.ToLower().Contains(search.ToLower()));
         }
 
         if (filterPapers.priceRange != null)
         {
             if (filterPapers.priceRange.minimumRange.HasValue)
-            {
                 query = query.Where(p => p.Price >= filterPapers.priceRange.minimumRange.Value);
-            }
 
             if (filterPapers.priceRange.maximumRange.HasValue)
-            {
                 query = query.Where(p => p.Price <= filterPapers.priceRange.maximumRange.Value);
-            }
         }
 
         if (filterPapers.paperPropertiesIds != null && filterPapers.paperPropertiesIds.Any())
-        {
             query = query.Where(p => p.Properties.Any(prop => filterPapers.paperPropertiesIds.Contains(prop.Id)));
-        }
 
         query = query.Where(p => p.Discontinued != true);
         var result = await query
@@ -65,10 +56,7 @@ public class PaperRepository : IRepository
     {
         var query = _dataBaseContext.Papers.AsQueryable();
 
-        if (pageNumber > 0)
-        {
-            query = query.Skip(pageNumber * pageItems);
-        }
+        if (pageNumber > 0) query = query.Skip(pageNumber * pageItems);
 
 
         return query
@@ -133,10 +121,7 @@ public class PaperRepository : IRepository
     public async Task<PaperProperties> EditPaperProperty(PaperProperties paperProperties)
     {
         var property = await _dataBaseContext.Properties.FindAsync(paperProperties.PropId);
-        if (property == null)
-        {
-            throw new KeyNotFoundException("Property not found");
-        }
+        if (property == null) throw new KeyNotFoundException("Property not found");
 
         property.PropertyName = paperProperties.PropName!;
         _dataBaseContext.Properties.Update(property);
@@ -148,7 +133,6 @@ public class PaperRepository : IRepository
             PropName = property.PropertyName
         };
     }
-    
 
 
     public bool PaperExistsAsync(int paperId)
@@ -168,17 +152,11 @@ public class PaperRepository : IRepository
             .Include(p => p.Properties) // Make sure properties are included
             .FirstOrDefault(p => p.Id == paperId);
 
-        if (paper == null)
-        {
-            return false; // Paper not found
-        }
+        if (paper == null) return false; // Paper not found
 
         // Find the property in the paper's properties
         var propertyToRemove = paper.Properties.FirstOrDefault(p => p.Id == propertyId);
-        if (propertyToRemove == null)
-        {
-            return false; // Property not found
-        }
+        if (propertyToRemove == null) return false; // Property not found
 
         // Remove the property from the paper
         paper.Properties.Remove(propertyToRemove);
@@ -195,21 +173,12 @@ public class PaperRepository : IRepository
             .Include(p => p.Properties)
             .FirstOrDefaultAsync(p => p.Id == paperId);
 
-        if (paperToEdit == null)
-        {
-            return false;
-        }
+        if (paperToEdit == null) return false;
 
         var property = await _dataBaseContext.Properties.FindAsync(propertyId);
-        if (property == null)
-        {
-            return false;
-        }
+        if (property == null) return false;
 
-        if (paperToEdit.Properties.Any(p => p.Id == propertyId))
-        {
-            return false;
-        }
+        if (paperToEdit.Properties.Any(p => p.Id == propertyId)) return false;
 
         paperToEdit.Properties.Add(property);
         await _dataBaseContext.SaveChangesAsync();
@@ -220,10 +189,7 @@ public class PaperRepository : IRepository
     public async Task<bool> EditPaper(PaperToDisplay paperToBeEdited)
     {
         var paperToEdit = await _dataBaseContext.Papers.FindAsync(paperToBeEdited.Id);
-        if (paperToEdit == null)
-        {
-            return false;
-        }
+        if (paperToEdit == null) return false;
 
         paperToEdit.Name = paperToBeEdited.Name;
         paperToEdit.Discontinued = paperToBeEdited.Discontinued;
@@ -248,7 +214,7 @@ public class PaperRepository : IRepository
         var paperProperties = await _dataBaseContext.Papers
             .Where(e => e.Id == paperId)
             .SelectMany(p => p.Properties)
-            .Select(p => new PaperProperties()
+            .Select(p => new PaperProperties
             {
                 PropId = p.Id,
                 PropName = p.PropertyName
@@ -259,10 +225,7 @@ public class PaperRepository : IRepository
     public async Task<bool> DeletePaperById(int paperId)
     {
         var requestPaper = await _dataBaseContext.Papers.Where(e => e.Id == paperId).FirstOrDefaultAsync();
-        if (requestPaper == null)
-        {
-            return false;
-        }
+        if (requestPaper == null) return false;
 
         _dataBaseContext.Papers.Remove(requestPaper);
         await _dataBaseContext.SaveChangesAsync();
@@ -279,13 +242,18 @@ public class PaperRepository : IRepository
 
     public async Task<bool> DeletePaperProperty(int propertyId, string propertyName)
     {
-        var property = _dataBaseContext.Properties.FindAsync(propertyId);
-        if (property.Result == null)
+        var property = await _dataBaseContext.Properties.FindAsync(propertyId);
+        if (property == null) return false;
+        var papers = await _dataBaseContext.Papers
+            .Include(p => p.Properties)
+            .Where(p => p.Properties.Any(prop => prop.Id == propertyId))
+            .ToListAsync();
+        foreach (var paper in papers)
         {
-            return false;
+            paper.Properties.Remove(property);
         }
-
-        _dataBaseContext.Properties.Remove(property.Result!);
+        
+        _dataBaseContext.Properties.Remove(property);
         await _dataBaseContext.SaveChangesAsync();
         return true;
     }

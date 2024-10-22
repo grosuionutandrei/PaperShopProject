@@ -1,12 +1,10 @@
 ﻿using infrastructure.QuerryModels;
-using infrastructure.Repository;
 using infrastructure.Repository.Orders;
 using utilities.OrderStatus;
 
-
 namespace service.Orders;
 
-public class OrderService:IOrderService
+public class OrderService : IOrderService
 {
     private readonly IOrderRepository _repository;
 
@@ -14,6 +12,7 @@ public class OrderService:IOrderService
     {
         _repository = repository;
     }
+
     public Task<IEnumerable<OrderMain>> GetOrdersByCustomerId(int customerId)
     {
         return _repository.GetOrdersByCustomerId(customerId);
@@ -36,32 +35,32 @@ public class OrderService:IOrderService
 
     public Task<bool> ModifyOrderStatus(int orderId, string status)
     {
-        return _repository.ModifyOrderStatus(orderId,status);
+        return _repository.ModifyOrderStatus(orderId, status);
     }
 
-    public  Task<OrderMain> PlaceOrder(int customerId, List<OrderEntryPlaced> orderEntries)
+    public Task<OrderMain> PlaceOrder(int customerId, List<OrderEntryPlaced> orderEntries)
     {
-         DateTime currentDate = DateTime.UtcNow;
-         DateOnly standardDeliveryDate = DateOnly.FromDateTime(currentDate.AddDays(3));
-         string Status = OrderStatusMessage.GetMessage(OrderStatus.Pending);
-         var ProductsPrices = _repository.GetProductsPrices(orderEntries);
-         
-         var totalAmount = orderEntries.Sum(oe => 
-         {
-             ProductsPrices.TryGetValue(oe.ProductId, out var price);
-             return oe.Quantity * price;
-         });
-        
+        var currentDate = DateTime.UtcNow;
+        var standardDeliveryDate = DateOnly.FromDateTime(currentDate.AddDays(3));
+        var Status = OrderStatusMessage.GetMessage(OrderStatus.Pending);
+        var ProductsPrices = _repository.GetProductsPrices(orderEntries);
+
+        var totalAmount = orderEntries.Sum(oe =>
+        {
+            ProductsPrices.TryGetValue(oe.ProductId, out var price);
+            return oe.Quantity * price;
+        });
+
         var orderPlaced = new OrderPlaced
         {
             OrderDate = currentDate,
             DeliveryDate = standardDeliveryDate,
             Status = Status,
             OrderProducts = orderEntries,
-            TotalAmount=totalAmount
+            TotalAmount = totalAmount
         };
 
-        return _repository.PlaceOrder(customerId,orderPlaced);
+        return _repository.PlaceOrder(customerId, orderPlaced);
     }
 
     public Task<IEnumerable<OrderMain>> GetCustomerOrderHistory(int customerId)
@@ -79,8 +78,8 @@ public class OrderService:IOrderService
         return OrderStatusMessage.IsStatusValid(orderStatus);
     }
 
-    public Task<bool> UpdateOrderStatus(string? statusStatus,int orderId)
+    public Task<bool> UpdateOrderStatus(string? statusStatus, int orderId)
     {
-        return _repository.UpdateOrderStatus(statusStatus,orderId);
+        return _repository.UpdateOrderStatus(statusStatus, orderId);
     }
 }

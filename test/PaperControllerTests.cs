@@ -5,14 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using service.Paper;
-using utilities.ErrorMessages;
-
 
 public class PaperControllerTests
 {
-    private readonly Mock<IPaperService> _mockPaperService;
-    private readonly Mock<ILogger<PaperController>> _mockLogger;
     private readonly PaperController _controller;
+    private readonly Mock<ILogger<PaperController>> _mockLogger;
+    private readonly Mock<IPaperService> _mockPaperService;
 
     public PaperControllerTests()
     {
@@ -28,7 +26,7 @@ public class PaperControllerTests
         var pageNumber = 1;
         var paginationQuery = new PaperPaginationQueryDto { PageItems = 10 };
         _mockPaperService.Setup(service => service.GetPaperWithQuerries(pageNumber, paginationQuery.PageItems))
-            .Returns(new List<PaperToDisplay> { new PaperToDisplay { Id = 1, Name = "Paper A" } });
+            .Returns(new List<PaperToDisplay> { new() { Id = 1, Name = "Paper A" } });
 
         // Act
         var result = _controller.GetPaper(pageNumber, paginationQuery);
@@ -38,7 +36,7 @@ public class PaperControllerTests
         var returnedPapers = Assert.IsAssignableFrom<IEnumerable<PaperToDisplay>>(okResult.Value);
         Assert.Single(returnedPapers);
     }
-    
+
     [Fact]
     public async Task GetPaperByFilter_ShouldReturnBadRequest_WhenFilterDtoIsNull()
     {
@@ -110,7 +108,7 @@ public class PaperControllerTests
         var returnedPaper = Assert.IsType<EditPaperDto>(okResult.Value);
         Assert.Equal(editPaperDto.Id, returnedPaper.Id);
     }
-    
+
     [Fact]
     public async Task DeletePaper_ShouldReturnOk_WhenPaperIsDeleted()
     {
@@ -140,6 +138,7 @@ public class PaperControllerTests
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(result.Result);
         Assert.False((bool)notFoundResult.Value);
     }
+
     [Fact]
     public async Task GetPaperByFilter_ShouldReturnOk_WhenFilterIsValid()
     {
@@ -154,7 +153,7 @@ public class PaperControllerTests
 
         var expectedPapers = new List<PaperToDisplay>
         {
-            new PaperToDisplay { Id = 1, Name = "Filtered Paper" }
+            new() { Id = 1, Name = "Filtered Paper" }
         };
 
         _mockPaperService.Setup(service => service.GetPapersByFilter(It.IsAny<PaperFilterQuery>()))
@@ -170,5 +169,4 @@ public class PaperControllerTests
         Assert.Equal(expectedPapers[0].Id, returnedPapers.First().Id);
         Assert.Equal(expectedPapers[0].Name, returnedPapers.First().Name);
     }
-
 }

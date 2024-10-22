@@ -1,11 +1,11 @@
 ﻿using api.TransferModels;
 using api.Validators;
 using FluentValidation.TestHelper;
-using Xunit;
 
 public class CreatePropertyValidatorTests
 {
     private readonly CreatePropertyValidator _validator;
+
     public CreatePropertyValidatorTests()
     {
         _validator = new CreatePropertyValidator();

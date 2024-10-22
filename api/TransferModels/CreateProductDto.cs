@@ -9,5 +9,5 @@ public class CreateProductDto
     public int Stock { get; set; }
 
     public double Price { get; set; }
-    public IEnumerable<PaperProperties>? PaperPropertiesList { get;set; }
+    public IEnumerable<PaperProperties>? PaperPropertiesList { get; set; }
 }

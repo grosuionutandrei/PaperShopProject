@@ -23,7 +23,7 @@ public interface IRepository
     Task<PriceRange> GetPriceRange();
     Task<IEnumerable<PaperToDisplay>> GetPapersByFilter(PaperFilterQuery filterPapers);
     public bool PaperExistsAsync(int paperId);
-    public  Task<PaperToDisplay> CreatePaperProduct(PaperToAdd paperToAdd);
+    public Task<PaperToDisplay> CreatePaperProduct(PaperToAdd paperToAdd);
 
     public bool PropertyExistsAsync(int propertyId);
     Task<bool> RemovePropertyFromPaper(int paperId, int propertyId);

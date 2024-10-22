@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace infrastructure.Models;
 
-namespace infrastructure.Models;
-
-public partial class Paper
+public class Paper
 {
     public int Id { get; set; }
 

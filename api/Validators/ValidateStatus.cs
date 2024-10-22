@@ -2,11 +2,13 @@
 using FluentValidation;
 using service.Orders;
 using utilities.ErrorMessages;
+
 namespace api.Validators;
 
-public class ValidateStatus:AbstractValidator<Status>
+public class ValidateStatus : AbstractValidator<Status>
 {
-    IOrderService _orderService; 
+    private readonly IOrderService _orderService;
+
     public ValidateStatus(IOrderService orderService)
     {
         _orderService = orderService;

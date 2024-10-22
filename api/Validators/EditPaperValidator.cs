@@ -5,10 +5,11 @@ using utilities.ErrorMessages;
 
 namespace api.Validators;
 
-public class EditPaperValidator:AbstractValidator<EditPaperDto>
+public class EditPaperValidator : AbstractValidator<EditPaperDto>
 {
-    private IPaperService _paperService;
-    public EditPaperValidator(IPaperService paperService )
+    private readonly IPaperService _paperService;
+
+    public EditPaperValidator(IPaperService paperService)
     {
         _paperService = paperService;
         RuleFor(x => x.Id).Must(ArePaperEqual).WithMessage(ErrorMessages.GetMessage(ErrorCode.IdNotEqual));
@@ -22,6 +23,4 @@ public class EditPaperValidator:AbstractValidator<EditPaperDto>
     {
         return _paperService.ArePaperObjectsEqual(id).Result;
     }
-    
 }
-

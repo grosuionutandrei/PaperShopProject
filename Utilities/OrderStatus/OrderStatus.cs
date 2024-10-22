@@ -11,13 +11,13 @@ public enum OrderStatus
 
 public static class OrderStatusMessage
 {
-    private static readonly Dictionary<OrderStatus, string> StatusMessages = new Dictionary<OrderStatus, string>
+    private static readonly Dictionary<OrderStatus, string> StatusMessages = new()
     {
         { OrderStatus.Shipped, "Shipped" },
         { OrderStatus.Cancelled, "Cancelled" },
         { OrderStatus.Declined, "Declined" },
         { OrderStatus.Pending, "Pending" },
-        { OrderStatus.Completed, "Completed" },
+        { OrderStatus.Completed, "Completed" }
     };
 
     public static string GetMessage(OrderStatus orderStatus)

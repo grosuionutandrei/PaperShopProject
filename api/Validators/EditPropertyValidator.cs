@@ -4,7 +4,7 @@ using utilities.ErrorMessages;
 
 namespace api.Validators;
 
-public class EditPropertyValidator:AbstractValidator<EditPaperPropertyDto>
+public class EditPropertyValidator : AbstractValidator<EditPaperPropertyDto>
 {
     public EditPropertyValidator()
     {
